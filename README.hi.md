@@ -1,10 +1,12 @@
-**उपलब्ध भाषाएँ (Available in)**:
-- [अंग्रेज़ी (EN)](./README.md)
-- [स्पेनिश (ES)](./README.es.md)
-- [फ़्रेंच (FR)](./README.fr.md)
-- [जर्मन (DE)](./README.de.md)
-- [पुर्तग़ाली (PT/BR)](./README.pt.md)
-- [हिंदी (HI)](./README.hi.md)
+**उपलब्ध भाषाएँ**:
+- [English (EN)](./README.md)
+- [Spanish (ES)](./README.es.md)
+- [French (FR)](./README.fr.md)
+- [German (DE)](./README.de.md)
+- [Portuguese (PT/BR)](./README.pt.md)
+- [Hindi (HI)](./README.hi.md) *(वर्तमान)*
+- [Chinese (ZH)](./README.zh.md)
+- [Japanese (JA)](./README.ja.md)
 
 # EPI - Easy Passive Income
 
