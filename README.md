@@ -1,81 +1,92 @@
+**Available in**:
+- [English (EN)](./README.md)
+- [Spanish (ES)](./README.es.md) *(coming soon)*
+
 # EPI - Easy Passive Income
 
-¡Bienvenido(a)! Aquí encontrarás una lista de aplicaciones y servicios para generar ingresos pasivos compartiendo tu conexión a internet. Todas estas plataformas las he probado **personalmente** y **las recomiendo**, ya que son las que uso **24/7**.
+Welcome! Here you'll find a list of applications and services to generate passive income by sharing your internet connection. I've personally tested and **recommended** each platform below, using them **24/7**.
 
-> **Nota**: Lo recomendable es **probar al menos 1 mes** cada plataforma para **evaluar bien las ganancias**, ya que varían día a día.  
-> Las **IPs residenciales** suelen generar ingresos más altos, pero con IP de **datacenter** también es **rentable** y **fácil de escalar**.
+> **Note**: It is advisable to **try each platform for at least 1 month** to accurately gauge your earnings, as they can vary daily.  
+> **Residential IPs** usually yield higher earnings, but **Datacenter IPs** can still be profitable, are easier to scale, and cost very little thanks to cheap VPS options.  
+> The following setup aims to be **100% automated and passive**; you just need to check your earnings on each platform from time to time.
 
-## Consideraciones Generales
+## Cross-Platform Support
 
-- Para **maximizar** los ingresos, **se recomienda usar 1 dispositivo por IP** en la mayoría de las plataformas.  
-- Cada plataforma puede tener sus propias reglas de uso y límites (consulta sus Términos y Condiciones).
-
----
-
-## Plataformas Disponibles
-
-| Plataforma                                                                                                                                     | Ganancias | Residential / Mobile IP | VPS / Hosting IP | Máx. Devices | Payout Type              | Enlace de referido con bonus                                                                     |
-|------------------------------------------------------------------------------------------------------------------------------------------------|:--------:|:-----------------------:|:----------------:|:------------:|--------------------------|---------------------------------------------------------------------------------------------------|
-| [**Honeygain**](https://r.honeygain.me/ANGEL9D7E9)                                                                                            | 💸💸💸    | ✔️                     | ❌               | 10           | PayPal, Crypto           | [¡Registrarme con bonus!](https://r.honeygain.me/ANGEL9D7E9)                                      |
-| [**PacketStream**](https://packetstream.io/?psr=6qS0)                                                                                         | 💸💸💸    | ✔️                     | ❌               | Ilimitado    | PayPal                   | [¡Registrarme con bonus!](https://packetstream.io/?psr=6qS0)                                      |
-| [**Traffmonetizer**](https://traffmonetizer.com/?aff=1803256)                                                                                 | 💸💸💸    | ✔️                     | ✔️               | Ilimitado    | Crypto                   | [¡Registrarme con bonus!](https://traffmonetizer.com/?aff=1803256)                                |
-| [**Packetshare**](https://www.packetshare.io/?code=E3CA44CD760C7F8E)                                                                          | 💸💸💸    | ✔️                     | ✔️               | Ilimitado    | PayPal                   | [¡Registrarme con bonus!](https://www.packetshare.io/?code=E3CA44CD760C7F8E)                     |
-| [**MystNodes**](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp)                                                  | 💸💸💸    | ✔️                     | ✔️               | Ilimitado    | Crypto                   | [¡Registrarme con bonus!](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp) |
-| [**Pawns.app**](https://pawns.app/?r=9881702)                                                                                                 | 💸💸💸    | ✔️                     | ❌               | Ilimitado    | PayPal, Crypto           | [¡Registrarme con bonus!](https://pawns.app/?r=9881702)                                           |
-| [**EarnApp**](https://earnapp.com/i/KF4FCFn6)                                                                                                 |  💸💸     | ✔️                     | ❌               | 15           | PayPal                   | [¡Registrarme con bonus!](https://earnapp.com/i/KF4FCFn6)                                         |
-| [**Repocket**](https://link.repocket.com/YaO7)                                                                                                |  💸💸     | ✔️                     | ✔️               | Ilimitado    | PayPal, Wise             | [¡Registrarme con bonus!](https://link.repocket.com/YaO7)                                         |
-| [**ByteLixir (Proxy)**](https://bytelixir.com/r/NPONRRIEOSLD)                                                                                 |  💸💸     | ✔️                     | ✔️               | Ilimitado    | Crypto                   | [¡Registrarme con bonus!](https://bytelixir.com/r/NPONRRIEOSLD)                                  |
-| [**Earn.FM**](https://earn.fm/ref/ANGE7R5R)                                                                                                   |  💸💸     | ✔️                     | ✔️               | Ilimitado    | PayPal, Crypto           | [¡Registrarme con bonus!](https://earn.fm/ref/ANGE7R5R)                                           |
-| [**Proxyrack**](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne)                                                      |   💸      | ✔️                     | ✔️               | 500          | PayPal                   | [¡Registrarme con bonus!](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne) |
-| [**Bitping**](https://bitping.com/)                                                                                                           |   💸      | ✔️                     | ✔️               | Ilimitado    | Crypto                   |                                                    |
+Most of these platforms have support for Windows, Mac, Linux, Android, etc. However, the **configuration here focuses on Linux** because it requires fewer resources overall and is cost-effective when renting a low-priced VPS. The more devices you install it on, the higher your potential earnings.
 
 ---
 
-## Configuración Recomendada
+## General Considerations
 
-Para utilizar la configuración que explicaré más adelante, necesitas al menos:
+- To **maximize** your earnings, **use 1 device per IP** (where applicable).  
+- Each platform may have its own usage rules and device limits. Check each Terms & Conditions.
+
+---
+
+## Available Platforms
+
+| Platform                                                                                                                                       | Earnings | Residential / Mobile IP | VPS / Hosting IP | Max Devices | Payout Type              | Referral Link with Bonus                                                                         |
+|------------------------------------------------------------------------------------------------------------------------------------------------|:--------:|:-----------------------:|:----------------:|:-----------:|--------------------------|---------------------------------------------------------------------------------------------------|
+| [**Honeygain**](https://r.honeygain.me/ANGEL9D7E9)                                                                                            | 💸💸💸    | ✔️                     | ❌               | 10          | PayPal, Crypto           | [Sign up with bonus!](https://r.honeygain.me/ANGEL9D7E9)                                          |
+| [**PacketStream**](https://packetstream.io/?psr=6qS0)                                                                                         | 💸💸💸    | ✔️                     | ❌               | Unlimited   | PayPal                   | [Sign up with bonus!](https://packetstream.io/?psr=6qS0)                                          |
+| [**Traffmonetizer**](https://traffmonetizer.com/?aff=1803256)                                                                                 | 💸💸💸    | ✔️                     | ✔️               | Unlimited   | Crypto                   | [Sign up with bonus!](https://traffmonetizer.com/?aff=1803256)                                    |
+| [**Packetshare**](https://www.packetshare.io/?code=E3CA44CD760C7F8E)                                                                          | 💸💸💸    | ✔️                     | ✔️               | Unlimited   | PayPal                   | [Sign up with bonus!](https://www.packetshare.io/?code=E3CA44CD760C7F8E)                         |
+| [**MystNodes**](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp)                                                  | 💸💸💸    | ✔️                     | ✔️               | Unlimited   | Crypto                   | [Sign up with bonus!](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp) |
+| [**Pawns.app**](https://pawns.app/?r=9881702)                                                                                                 | 💸💸💸    | ✔️                     | ❌               | Unlimited   | PayPal, Crypto           | [Sign up with bonus!](https://pawns.app/?r=9881702)                                               |
+| [**EarnApp**](https://earnapp.com/i/KF4FCFn6)                                                                                                 |  💸💸     | ✔️                     | ❌               | 15          | PayPal                   | [Sign up with bonus!](https://earnapp.com/i/KF4FCFn6)                                             |
+| [**Repocket**](https://link.repocket.com/YaO7)                                                                                                |  💸💸     | ✔️                     | ✔️               | Unlimited   | PayPal, Wise             | [Sign up with bonus!](https://link.repocket.com/YaO7)                                             |
+| [**ByteLixir (Proxy)**](https://bytelixir.com/r/NPONRRIEOSLD)                                                                                 |  💸💸     | ✔️                     | ✔️               | Unlimited   | Crypto                   | [Sign up with bonus!](https://bytelixir.com/r/NPONRRIEOSLD)                                      |
+| [**Earn.FM**](https://earn.fm/ref/ANGE7R5R)                                                                                                   |  💸💸     | ✔️                     | ✔️               | Unlimited   | PayPal, Crypto           | [Sign up with bonus!](https://earn.fm/ref/ANGE7R5R)                                               |
+| [**Proxyrack**](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne)                                                      |   💸      | ✔️                     | ✔️               | 500         | PayPal                   | [Sign up with bonus!](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne)     |
+| [**Bitping**](https://bitping.com/)                                                                                                           |   💸      | ✔️                     | ✔️               | Unlimited   | Crypto                   |                                                                                                   |
+
+---
+
+## Recommended Setup
+
+To use the configuration explained below, you need at least:
 
 - **1 vCore CPU**  
 - **1 GB RAM**  
-- **10 GB NVMe o SSD**  
-- **Sistema Operativo:** Ubuntu 24.04 (Linux)
+- **10 GB NVMe or SSD**  
+- **Operating System:** Ubuntu 24.04 (Linux)
 
-### ¡Oferta Especial con IONOS!
+### Special Offer with IONOS
 
-> #### **Enlace de referido para IONOS**  
-> **Yo utilizo [IONOS VPS Linux XS](https://aklam.io/hkgdoN) por solo 1€/mes + impuestos**, y tengo **varios** VPS de este tipo contratados.  
+> #### **IONOS Referral Link**  
+> **I use [IONOS VPS Linux XS](https://aklam.io/hkgdoN) for only €1/month + taxes**, and I have **several** of these VPS.  
 >  
-> Cada VPS te proporciona **una IP única**, y te permiten elegir el centro de datos entre **Estados Unidos**, **España**, **Alemania** o **Reino Unido**.  
+> Each VPS provides a **unique IP**, and you can choose the datacenter between **US**, **Spain**, **Germany**, or **UK**.  
 >  
-> **[Haz clic aquí para contratar con mi enlace de referido](https://aklam.io/hkgdoN)**  
-> - Si te registras con mi enlace, dependiendo del producto que elijas, **recibirás un bonus desde 1€ hasta 150€**.  
-> - Por ejemplo, si eliges **VPS Linux XS**, obtendrás **1€ de bonus** y además **30 días de prueba**.  
-> - ¡Si cancelas dentro de esos 30 días, **te devuelven tu dinero**, así que no pierdes nada por probarlo!
+> **[Click here to use my referral link](https://aklam.io/hkgdoN)**  
+> - Depending on the product you select, you can **receive a bonus from €1 up to €150**.  
+> - For instance, with **VPS Linux XS**, you’ll get **€1 bonus** plus a **30-day trial**.  
+> - If you cancel within those 30 days, **you get a full refund**, so there’s no risk!
 
 ---
 
-## ¿Cómo Instalarlo?
+## How to Install
 
-Aquí tienes los pasos más simples posibles para que empieces a ganar dinero compartiendo tu conexión.  
+Below are the simplest steps so you can start earning by sharing your connection.
 
-> **Nota importante:** Al contratar tu VPS (por ejemplo, con IONOS), entra al **Panel de Control** y configura el **firewall** para que **todos los puertos** estén abiertos (o los que necesites). Como no tenemos nada crítico, abrirlos todos simplifica la configuración inicial.
+> **Important Note**: When you rent a VPS (for example, with IONOS), go to the **Control Panel** and open the **firewall** for **all ports** (or only the ones you need). Since there’s nothing critical inside this server, opening everything simplifies the setup.
 
-### 1. Preparar el Sistema
+### 1. Prepare the System
 
-Copia y pega este bloque de comandos para:
-1. **Actualizar y optimizar** el sistema, 
-2. **Instalar paquetes básicos** (incluyendo `nano`, para editar archivos),
-3. **Instalar Docker**, 
-4. **Instalar Watchtower**, 
-5. **Configurar un cron** mensual (día 1 a las 4 AM) para mantenimiento,  
-6. **Limpiar** el sistema.
+Copy and paste this block of commands to:
+1. **Update and optimize** the system,  
+2. **Install basic packages** (including `nano` for editing files),
+3. **Install Docker**,  
+4. **Install Watchtower**,  
+5. **Configure a monthly cron** on day 1 at 4 AM for maintenance,  
+6. **Clean** the system.
 
 ```bash
-echo "[INFO] Actualizando y optimizando el sistema..."
+echo "[INFO] Updating and optimizing the system..."
 apt update && apt upgrade -y
 apt install -y curl wget htop ufw git zip unzip nano
 
-echo "[INFO] Instalando Docker..."
+echo "[INFO] Installing Docker..."
 apt install -y apt-transport-https ca-certificates software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -83,7 +94,7 @@ apt update && apt install -y docker-ce
 systemctl start docker
 systemctl enable docker
 
-echo "[INFO] Instalando Watchtower (actualizaciones automáticas de contenedores)..."
+echo "[INFO] Installing Watchtower (auto-updates for containers)..."
 docker run -d \
   --name watchtower \
   --restart=always \
@@ -96,41 +107,41 @@ docker run -d \
   --interval 3600 \
   --stop-timeout 30s
 
-echo "[INFO] Configurando tarea cron mensual para mantenimiento (día 1 a las 4 AM)..."
+echo "[INFO] Setting up monthly cron job (day 1 at 4 AM)..."
 (crontab -l ; echo "0 4 1 * * apt update && apt upgrade -y && apt install --only-upgrade -y docker-ce && apt update && apt install myst -y && (reboot || sleep 30 && reboot -f)") | sort - | uniq - | crontab -
 
-echo "[INFO] Limpieza final..."
+echo "[INFO] Final cleanup..."
 apt autoremove -y && apt autoclean -y
 ```
 
-> - **Watchtower** verificará actualizaciones cada hora.  
-> - El **cron** se ejecutará el **día 1 de cada mes a las 04:00** (hora del sistema).  
-> - Se reiniciará el VPS tras actualizar, para mantener todo al día.
+> - **Watchtower** checks for container updates every hour.  
+> - The **cron** runs on **day 1 of the month at 04:00** (system time).  
+> - The VPS restarts after updating, keeping everything fresh.
 
 ---
 
-## 2. Configuración Individual de Plataformas
+## 2. Individual Setup for Each Platform
 
-A continuación, podrás instalar **solo las plataformas** que quieras. Cada sección tiene:
-- Un texto **“Haz clic aquí y regístrate con bonus!”** con tu enlace de referido,  
-- Explicación de los parámetros (API Key, usuario, contraseña, etc.),  
-- Y, finalmente, el **bloque de código** a copiar y pegar.
+Next, you can install **only the platforms** you want. Each section has:
+- A **“Click here and sign up with bonus!”** link (your referral),
+- A quick explanation of parameters (API keys, user, password, etc.),
+- And a **block of code** to copy and paste.
 
 ---
 
 #### 2.1 Honeygain
 
-[**Haz clic aquí y regístrate con bonus**](https://r.honeygain.me/ANGEL9D7E9)
+[**Click here and sign up with bonus!**](https://r.honeygain.me/ANGEL9D7E9)
 
-- Sustituye `TU_EMAIL_HONEYGAIN` y `TU_PASSWORD_HONEYGAIN` por tus datos.
+- Replace `YOUR_HONEYGAIN_EMAIL` and `YOUR_HONEYGAIN_PASSWORD` with your details.
 
 ```bash
-echo "[INFO] Instalando Honeygain..."
+echo "[INFO] Installing Honeygain..."
 docker run -d \
   --name honeygain \
   --restart=always \
-  -e EMAIL="TU_EMAIL_HONEYGAIN" \
-  -e PASSWORD="TU_PASSWORD_HONEYGAIN" \
+  -e EMAIL="YOUR_HONEYGAIN_EMAIL" \
+  -e PASSWORD="YOUR_HONEYGAIN_PASSWORD" \
   honeygain/honeygain:latest
 ```
 
@@ -138,17 +149,17 @@ docker run -d \
 
 #### 2.2 PacketStream
 
-[**Haz clic aquí y regístrate con bonus**](https://packetstream.io/?psr=6qS0)
+[**Click here and sign up with bonus!**](https://packetstream.io/?psr=6qS0)
 
-- Sustituye `TU_EMAIL_PACKETSTREAM` y `TU_PASSWORD_PACKETSTREAM`.
+- Replace `YOUR_PACKETSTREAM_EMAIL` and `YOUR_PACKETSTREAM_PASSWORD`.
 
 ```bash
-echo "[INFO] Instalando PacketStream..."
+echo "[INFO] Installing PacketStream..."
 docker run -d \
   --name packetstream \
   --restart=always \
-  -e EMAIL="TU_EMAIL_PACKETSTREAM" \
-  -e PASSWORD="TU_PASSWORD_PACKETSTREAM" \
+  -e EMAIL="YOUR_PACKETSTREAM_EMAIL" \
+  -e PASSWORD="YOUR_PACKETSTREAM_PASSWORD" \
   packetstream/packetstream:latest
 ```
 
@@ -156,66 +167,67 @@ docker run -d \
 
 #### 2.3 Traffmonetizer
 
-[**Haz clic aquí y regístrate con bonus**](https://traffmonetizer.com/?aff=1803256)
+[**Click here and sign up with bonus!**](https://traffmonetizer.com/?aff=1803256)
 
-- Sustituye `AQUI_TU_TOKEN_TRAFFMONETIZER` por tu **token** de Traffmonetizer.
+- Replace `YOUR_TRAFFMONETIZER_TOKEN` with your Traffmonetizer token.
 
 ```bash
-echo "[INFO] Instalando Traffmonetizer..."
+echo "[INFO] Installing Traffmonetizer..."
 docker run -d \
   --name tm \
   --restart=always \
-  traffmonetizer/cli_v2 start accept --token AQUI_TU_TOKEN_TRAFFMONETIZER
+  traffmonetizer/cli_v2 start accept --token YOUR_TRAFFMONETIZER_TOKEN
 ```
 
 ---
 
 #### 2.4 Packetshare
 
-[**Haz clic aquí y regístrate con bonus**](https://www.packetshare.io/?code=E3CA44CD760C7F8E)
+[**Click here and sign up with bonus!**](https://www.packetshare.io/?code=E3CA44CD760C7F8E)
 
-- Sustituye `TU_EMAIL_PACKETSHARE` y `TU_PASSWORD_PACKETSHARE`.
+- Replace `YOUR_PACKETSHARE_EMAIL` and `YOUR_PACKETSHARE_PASSWORD`.
 
 ```bash
-echo "[INFO] Instalando Packetshare..."
+echo "[INFO] Installing Packetshare..."
 docker run -d \
   --name packetshare \
   --restart=always \
   packetshare/packetshare \
   -accept-tos \
-  -email=TU_EMAIL_PACKETSHARE \
-  -password=TU_PASSWORD_PACKETSHARE
+  -email=YOUR_PACKETSHARE_EMAIL \
+  -password=YOUR_PACKETSHARE_PASSWORD
 ```
 
 ---
 
 #### 2.5 MystNodes
 
-[**Haz clic aquí y regístrate con bonus**](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp)
+[**Click here and sign up with bonus!**](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp)
 
-- Tras la instalación, accede a `http://TU_IP_PUBLICA:4449` para activar tu nodo.
+- After installation, go to `http://YOUR_PUBLIC_IP:4449` to activate your node.
 
 ```bash
-echo "[INFO] Instalando MystNode..."
+echo "[INFO] Installing MystNode..."
 sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/mysteriumnetwork/node/master/install.sh)"
 ```
-> Después de unos segundos, abre `http://xx.xx.xx.xx:4449` en tu navegador para configurar y activar la cuenta.
+
+> Then open `http://xx.xx.xx.xx:4449` in your browser to configure and activate the account.
 
 ---
 
 #### 2.6 Pawns.app
 
-[**Haz clic aquí y regístrate con bonus**](https://pawns.app/?r=9881702)
+[**Click here and sign up with bonus!**](https://pawns.app/?r=9881702)
 
-- Sustituye `TU_EMAIL_PAWNS` y `TU_PASSWORD_PAWNS`.
+- Replace `YOUR_PAWNS_EMAIL` and `YOUR_PAWNS_PASSWORD`.
 
 ```bash
-echo "[INFO] Instalando Pawns.app..."
+echo "[INFO] Installing Pawns.app..."
 docker run -d \
   --name pawns \
   --restart=always \
-  -e PAWNS_EMAIL="TU_EMAIL_PAWNS" \
-  -e PAWNS_PASSWORD="TU_PASSWORD_PAWNS" \
+  -e PAWNS_EMAIL="YOUR_PAWNS_EMAIL" \
+  -e PAWNS_PASSWORD="YOUR_PAWNS_PASSWORD" \
   pawns/app:latest
 ```
 
@@ -223,17 +235,17 @@ docker run -d \
 
 #### 2.7 EarnApp
 
-[**Haz clic aquí y regístrate con bonus**](https://earnapp.com/i/KF4FCFn6)
+[**Click here and sign up with bonus!**](https://earnapp.com/i/KF4FCFn6)
 
-- Sustituye `TU_EMAIL_EARNAPP` y `TU_PASSWORD_EARNAPP`.
+- Replace `YOUR_EARNAPP_EMAIL` and `YOUR_EARNAPP_PASSWORD`.
 
 ```bash
-echo "[INFO] Instalando EarnApp..."
+echo "[INFO] Installing EarnApp..."
 docker run -d \
   --name earnapp \
   --restart=always \
-  -e EARNAPP_EMAIL="TU_EMAIL_EARNAPP" \
-  -e EARNAPP_PASSWORD="TU_PASSWORD_EARNAPP" \
+  -e EARNAPP_EMAIL="YOUR_EARNAPP_EMAIL" \
+  -e EARNAPP_PASSWORD="YOUR_EARNAPP_PASSWORD" \
   earnapp/earnapp:latest
 ```
 
@@ -241,17 +253,17 @@ docker run -d \
 
 #### 2.8 Repocket
 
-[**Haz clic aquí y regístrate con bonus**](https://link.repocket.com/YaO7)
+[**Click here and sign up with bonus!**](https://link.repocket.com/YaO7)
 
-- Sustituye `TU_EMAIL_REPOCKET` y `AQUI_TU_APIKEY_REPOCKET`.
+- Replace `YOUR_REPOCKET_EMAIL` and `YOUR_REPOCKET_APIKEY`.
 
 ```bash
-echo "[INFO] Instalando Repocket..."
+echo "[INFO] Installing Repocket..."
 docker run -d \
   --name repocket \
   --restart=always \
-  -e RP_EMAIL="TU_EMAIL_REPOCKET" \
-  -e RP_API_KEY="AQUI_TU_APIKEY_REPOCKET" \
+  -e RP_EMAIL="YOUR_REPOCKET_EMAIL" \
+  -e RP_API_KEY="YOUR_REPOCKET_APIKEY" \
   repocket/repocket
 ```
 
@@ -259,32 +271,32 @@ docker run -d \
 
 #### 2.9 ByteLixir (Proxy)
 
-[**Haz clic aquí y regístrate con bonus**](https://bytelixir.com/r/NPONRRIEOSLD)
+[**Click here and sign up with bonus!**](https://bytelixir.com/r/NPONRRIEOSLD)
 
-- Configura Dante para tener un **proxy SOCKS5**.  
-- Después, en la web de ByteLixir, añádelo como `socks5://USER:PASSWORD@IP_PUBLICA:15000`.
+- You’ll need **Dante** as a SOCKS5 proxy.  
+- Then, in ByteLixir’s site, add `socks5://USER:PASSWORD@PUBLIC_IP:15000`.
 
-**Paso A: Crear script con `nano`:**
+**Step A: Create a script with `nano`:**
 
 ```bash
 nano /root/dante_bytelixir.sh
 ```
 
-Copia y pega lo siguiente en el editor `nano`:
+Paste this inside:
 
 ```bash
 #!/bin/bash
-echo "[INFO] Instalando Dante para ByteLixir..."
+echo "[INFO] Installing Dante for ByteLixir..."
 apt update && apt install -y dante-server
 
-USER="AQUI_TU_USUARIO"
-PASSWORD="AQUI_TU_PASSWORD"
+USER="YOUR_PROXY_USER"
+PASSWORD="YOUR_PROXY_PASSWORD"
 PORT="15000"
 CONFIG_FILE="/etc/danted.conf"
 
 INTERFACE=$(ip route | grep default | awk '{print $5}' | head -n 1)
 if [ -z "$INTERFACE" ]; then
-    echo "No se pudo detectar la interfaz. Configura manualmente 'external' en $CONFIG_FILE."
+    echo "Could not detect the network interface. Please configure 'external' in $CONFIG_FILE manually."
     exit 1
 fi
 
@@ -323,33 +335,33 @@ systemctl restart danted
 systemctl status danted --no-pager
 netstat -tuln | grep \$PORT
 
-echo "[INFO] Dante configurado en el puerto \$PORT con usuario '\$USER' y contraseña '\$PASSWORD'"
+echo "[INFO] Dante configured on port \$PORT with user '\$USER' and password '\$PASSWORD'"
 ```
 
-Guarda y cierra (`Ctrl + O`, `Enter`, luego `Ctrl + X`).
+Save and close (`Ctrl + O`, `Enter`, then `Ctrl + X`).
 
-**Paso B: Dar permisos y ejecutar el script:**
+**Step B: Permissions and run the script:**
 
 ```bash
 chmod +x /root/dante_bytelixir.sh
 bash /root/dante_bytelixir.sh
 ```
-> Reemplaza `AQUI_TU_USUARIO` y `AQUI_TU_PASSWORD` dentro del script por los tuyos.
+> Replace `YOUR_PROXY_USER` and `YOUR_PROXY_PASSWORD` in the script.
 
 ---
 
 #### 2.10 Earn.FM
 
-[**Haz clic aquí y regístrate con bonus**](https://earn.fm/ref/ANGE7R5R)
+[**Click here and sign up with bonus!**](https://earn.fm/ref/ANGE7R5R)
 
-- Sustituye `AQUI_TU_TOKEN_EARNFM`.
+- Replace `YOUR_EARNFM_TOKEN`.
 
 ```bash
-echo "[INFO] Instalando EarnFM..."
+echo "[INFO] Installing EarnFM..."
 docker run -d \
   --restart=always \
   --name earnfm-client \
-  -e EARNFM_TOKEN="AQUI_TU_TOKEN_EARNFM" \
+  -e EARNFM_TOKEN="YOUR_EARNFM_TOKEN" \
   earnfm/earnfm-client:latest
 ```
 
@@ -357,20 +369,20 @@ docker run -d \
 
 #### 2.11 Proxyrack
 
-[**Haz clic aquí y regístrate con bonus**](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne)
+[**Click here and sign up with bonus!**](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne)
 
-> **Atención**: Primero **se instala** Proxyrack, y **luego** se registra en la web.
+> **Note**: You must install Proxyrack **first**, then register it on their website.
 
-1. **Generar** Device ID:
+1. **Generate** a Device ID:
    ```bash
-   echo "[INFO] Generando Device ID para Proxyrack..."
+   echo "[INFO] Generating Device ID for Proxyrack..."
    PROXYRACK_UUID=$(cat /dev/urandom | LC_ALL=C tr -dc 'A-F0-9' | dd bs=1 count=64 2>/dev/null && echo)
-   echo "[INFO] Device ID generado: $PROXYRACK_UUID"
-   echo "[INFO] Registra este dispositivo en Proxyrack cuando termine la instalación."
+   echo "[INFO] Device ID generated: $PROXYRACK_UUID"
+   echo "[INFO] Register this device on the Proxyrack website after the installation is done."
    ```
-2. **Instalar y configurar** Proxyrack:
+2. **Install and configure** Proxyrack:
    ```bash
-   echo "[INFO] Instalando Proxyrack..."
+   echo "[INFO] Installing Proxyrack..."
    docker run -d \
      --name proxyrack \
      --restart=always \
@@ -378,72 +390,72 @@ docker run -d \
      proxyrack/pop
    ```
 
-> Después de unos minutos, ve a la web de Proxyrack y **registra** el mismo Device ID que generaste.
+> After a few minutes, visit Proxyrack’s dashboard to register the same Device ID you generated.
 
 ---
 
 #### 2.12 Bitping
 
-- Sustituye `TU_EMAIL_BITPING` y `TU_PASSWORD_BITPING`.
+- Replace `YOUR_BITPING_EMAIL` and `YOUR_BITPING_PASSWORD`.
 
 ```bash
-echo "[INFO] Instalando BitPing..."
+echo "[INFO] Installing BitPing..."
 docker run -d \
   --restart=always \
   --name bitping-node \
-  -e BITPING_EMAIL='TU_EMAIL_BITPING' \
-  -e BITPING_PASSWORD='TU_PASSWORD_BITPING' \
+  -e BITPING_EMAIL='YOUR_BITPING_EMAIL' \
+  -e BITPING_PASSWORD='YOUR_BITPING_PASSWORD' \
   --mount type=volume,source="bitpingd-volume",target=/root/.bitpingd \
   bitping/bitpingd:latest
 ```
 
 ---
 
-## ¡Listo para ganar!
+## Ready to Earn!
 
-Con estas configuraciones, tu VPS quedará **automatizado**:
-- **Watchtower** actualiza los contenedores automáticamente.  
-- **Cron** hace mantenimiento y reinicia el servidor cada 1º de mes a las 4 AM.  
+With these configurations, your VPS is **automated**:
+- **Watchtower** keeps containers updated,  
+- **Cron** performs maintenance and reboots on day 1 at 4 AM.  
 
-Solo revisa los **dashboards** de cada plataforma para ver tus ganancias y retirarlas.
+Just check each platform’s dashboard to see your earnings and withdraw.
 
-### Preguntas Frecuentes
+### FAQ
 
-1. **¿Puedo instalar varias plataformas a la vez?**  
-   ¡Sí! Simplemente asegúrate de que no usen el mismo puerto o entren en conflicto.
+1. **Can I install multiple platforms simultaneously?**  
+   Yes! Just make sure they don’t conflict on ports or environment variables.
 
-2. **¿Cómo actualizo los contenedores manualmente?**  
-   Con Watchtower, no hace falta. Pero si quieres:
+2. **How do I manually update containers?**  
+   With Watchtower, you don’t really need to. But if you want:
    ```bash
-   docker pull NOMBRE_IMAGEN
-   docker restart NOMBRE_CONTENEDOR
+   docker pull IMAGE_NAME
+   docker restart CONTAINER_NAME
    ```
 
-3. **¿Qué pasa si quiero cambiar mis credenciales?**  
-   - Para la mayoría de contenedores:  
+3. **What if I need to change my credentials?**  
+   - For most containers:  
      ```bash
-     docker stop <contenedor>
-     docker rm <contenedor>
+     docker stop <container>
+     docker rm <container>
      ```
-     Y luego lo **recreas** con las nuevas variables de entorno.
+     Then **recreate** it with the new credentials.
 
 ---
 
-## ⚠️ Descargo de responsabilidad
+## ⚠️ Disclaimer
 
-Antes de usar estas aplicaciones, verifica que las leyes de tu país y los términos contractuales de tu plan de internet **permitan el uso de este tipo de servicios**. En cualquier caso, **no asumo ninguna responsabilidad** por las consecuencias derivadas del uso de estas aplicaciones. Este _stack_ que propongo **simplemente reúne** estas apps, permite **una configuración sencilla** incluso para quienes no tienen experiencia técnica, y **actualiza las imágenes automáticamente**.
+Before using these apps, check the laws in your country and the terms of your internet plan to see if they **allow** such services. In any case, **I take no responsibility** for the consequences of using these applications. This proposed stack **simply brings** these apps together, allows **easy configuration** for non-technical users, and **updates container images automatically**.
 
-Este proyecto y sus componentes se proporcionan **"tal cual"** y **sin garantías** de ningún tipo.
+This project and its artifacts are provided **“as is”** and **without warranty** of any kind.
 
-El autor **no garantiza**, ni expresa ni implícitamente, que este script esté **libre de errores o defectos**, o que **sea adecuado para un propósito concreto**.
+The author **makes no guarantees**, express or implied, that this script is **error-free**, **defect-free**, or **suitable for any specific purpose**.
 
-El autor no se hace responsable de **ningún daño** sufrido por el usuario de este script, ya sea **directo, indirecto, incidental, consecuente o especial**, que surja del uso o la imposibilidad de uso de este script o su documentación, **incluso si** el autor ha sido advertido de la posibilidad de dichos daños.
+The author is not liable for **any damages** suffered by any user of this script, whether **direct, indirect, incidental, consequential, or special**, arising from the use or inability to use this script or its documentation, **even if** the author has been advised of such possibility.
 
 ---
 
-### Agradecimientos
+### Acknowledgements
 
-He creado este manual para que sea **lo más fácil posible** y que **cualquier persona**, con solo **copiar y pegar** lo que necesita, pueda configurarlo sin problemas.  
-A ti por interesarte en este proyecto y a la comunidad que comparte nuevas plataformas y consejos para incrementar los ingresos.
+I created this manual to be **as easy as possible**, so **anyone** can configure it by simply **copying and pasting** what they need.  
+Thank you for your interest in this project, and thanks to the community that shares new platforms and tips to increase earnings.
 
-**¡Empecemos a ganar pasivamente!**
+**Let’s start earning passively!**
