@@ -1,6 +1,6 @@
 **Available in**:
 - [English (EN)](./README.md)
-- [Spanish (ES)](./README.es.md) *(coming soon)*
+- [Spanish (ES)](./README.es.md)
 
 # EPI - Easy Passive Income
 
@@ -25,20 +25,20 @@ Most of these platforms have support for Windows, Mac, Linux, Android, etc. Howe
 
 ## Available Platforms
 
-| Platform                                                                                                                                       | Earnings | Residential / Mobile IP | VPS / Hosting IP | Max Devices | Payout Type              | Referral Link with Bonus                                                                         |
-|------------------------------------------------------------------------------------------------------------------------------------------------|:--------:|:-----------------------:|:----------------:|:-----------:|--------------------------|---------------------------------------------------------------------------------------------------|
-| [**Honeygain**](https://r.honeygain.me/ANGEL9D7E9)                                                                                            | 💸💸💸    | ✔️                     | ❌               | 10          | PayPal, Crypto           | [Sign up with bonus!](https://r.honeygain.me/ANGEL9D7E9)                                          |
-| [**PacketStream**](https://packetstream.io/?psr=6qS0)                                                                                         | 💸💸💸    | ✔️                     | ❌               | Unlimited   | PayPal                   | [Sign up with bonus!](https://packetstream.io/?psr=6qS0)                                          |
-| [**Traffmonetizer**](https://traffmonetizer.com/?aff=1803256)                                                                                 | 💸💸💸    | ✔️                     | ✔️               | Unlimited   | Crypto                   | [Sign up with bonus!](https://traffmonetizer.com/?aff=1803256)                                    |
-| [**Packetshare**](https://www.packetshare.io/?code=E3CA44CD760C7F8E)                                                                          | 💸💸💸    | ✔️                     | ✔️               | Unlimited   | PayPal                   | [Sign up with bonus!](https://www.packetshare.io/?code=E3CA44CD760C7F8E)                         |
-| [**MystNodes**](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp)                                                  | 💸💸💸    | ✔️                     | ✔️               | Unlimited   | Crypto                   | [Sign up with bonus!](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp) |
-| [**Pawns.app**](https://pawns.app/?r=9881702)                                                                                                 | 💸💸💸    | ✔️                     | ❌               | Unlimited   | PayPal, Crypto           | [Sign up with bonus!](https://pawns.app/?r=9881702)                                               |
-| [**EarnApp**](https://earnapp.com/i/KF4FCFn6)                                                                                                 |  💸💸     | ✔️                     | ❌               | 15          | PayPal                   | [Sign up with bonus!](https://earnapp.com/i/KF4FCFn6)                                             |
-| [**Repocket**](https://link.repocket.com/YaO7)                                                                                                |  💸💸     | ✔️                     | ✔️               | Unlimited   | PayPal, Wise             | [Sign up with bonus!](https://link.repocket.com/YaO7)                                             |
-| [**ByteLixir (Proxy)**](https://bytelixir.com/r/NPONRRIEOSLD)                                                                                 |  💸💸     | ✔️                     | ✔️               | Unlimited   | Crypto                   | [Sign up with bonus!](https://bytelixir.com/r/NPONRRIEOSLD)                                      |
-| [**Earn.FM**](https://earn.fm/ref/ANGE7R5R)                                                                                                   |  💸💸     | ✔️                     | ✔️               | Unlimited   | PayPal, Crypto           | [Sign up with bonus!](https://earn.fm/ref/ANGE7R5R)                                               |
-| [**Proxyrack**](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne)                                                      |   💸      | ✔️                     | ✔️               | 500         | PayPal                   | [Sign up with bonus!](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne)     |
-| [**Bitping**](https://bitping.com/)                                                                                                           |   💸      | ✔️                     | ✔️               | Unlimited   | Crypto                   |                                                                                                   |
+| Platform                                                                                                                                       | **Earnings&nbsp;&nbsp;&nbsp;** | Residential / Mobile IP | VPS / Hosting IP | Max Devices | Payout Type              | Referral Link with Bonus                                                                         |
+|------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------:|:-----------------------:|:----------------:|:-----------:|--------------------------|---------------------------------------------------------------------------------------------------|
+| [**Honeygain**](https://r.honeygain.me/ANGEL9D7E9)                                                                                            | 💸💸💸                         | ✔️                     | ❌               | 10          | PayPal, Crypto           | [Sign up with bonus!](https://r.honeygain.me/ANGEL9D7E9)                                          |
+| [**PacketStream**](https://packetstream.io/?psr=6qS0)                                                                                         | 💸💸💸                         | ✔️                     | ❌               | Unlimited   | PayPal                   | [Sign up with bonus!](https://packetstream.io/?psr=6qS0)                                          |
+| [**Traffmonetizer**](https://traffmonetizer.com/?aff=1803256)                                                                                 | 💸💸💸                         | ✔️                     | ✔️               | Unlimited   | Crypto                   | [Sign up with bonus!](https://traffmonetizer.com/?aff=1803256)                                    |
+| [**Packetshare**](https://www.packetshare.io/?code=E3CA44CD760C7F8E)                                                                          | 💸💸💸                         | ✔️                     | ✔️               | Unlimited   | PayPal                   | [Sign up with bonus!](https://www.packetshare.io/?code=E3CA44CD760C7F8E)                         |
+| [**MystNodes**](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp)                                                  | 💸💸💸                         | ✔️                     | ✔️               | Unlimited   | Crypto                   | [Sign up with bonus!](https://mystnodes.co/?referral_code=7ANZj5JwkMhv3UAs1Mj8EprbGOHSbRvlB6WZGPdp) |
+| [**Pawns.app**](https://pawns.app/?r=9881702)                                                                                                 | 💸💸💸                         | ✔️                     | ❌               | Unlimited   | PayPal, Crypto           | [Sign up with bonus!](https://pawns.app/?r=9881702)                                               |
+| [**EarnApp**](https://earnapp.com/i/KF4FCFn6)                                                                                                 |   💸💸                         | ✔️                     | ❌               | 15          | PayPal                   | [Sign up with bonus!](https://earnapp.com/i/KF4FCFn6)                                             |
+| [**Repocket**](https://link.repocket.com/YaO7)                                                                                                |   💸💸                         | ✔️                     | ✔️               | Unlimited   | PayPal, Wise             | [Sign up with bonus!](https://link.repocket.com/YaO7)                                             |
+| [**ByteLixir (Proxy)**](https://bytelixir.com/r/NPONRRIEOSLD)                                                                                 |   💸💸                         | ✔️                     | ✔️               | Unlimited   | Crypto                   | [Sign up with bonus!](https://bytelixir.com/r/NPONRRIEOSLD)                                      |
+| [**Earn.FM**](https://earn.fm/ref/ANGE7R5R)                                                                                                   |   💸💸                         | ✔️                     | ✔️               | Unlimited   | PayPal, Crypto           | [Sign up with bonus!](https://earn.fm/ref/ANGE7R5R)                                               |
+| [**Proxyrack**](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne)                                                      |    💸                          | ✔️                     | ✔️               | 500         | PayPal                   | [Sign up with bonus!](https://peer.proxyrack.com/ref/0jumg0pdveooq7392pgam1ceplsnrolhwvym0qne)     |
+| [**Bitping**](https://bitping.com/)                                                                                                           |    💸                          | ✔️                     | ✔️               | Unlimited   | Crypto                   |                                                                                                   |
 
 ---
 
@@ -122,10 +122,7 @@ apt autoremove -y && apt autoclean -y
 
 ## 2. Individual Setup for Each Platform
 
-Next, you can install **only the platforms** you want. Each section has:
-- A **“Click here and sign up with bonus!”** link (your referral),
-- A quick explanation of parameters (API keys, user, password, etc.),
-- And a **block of code** to copy and paste.
+Below, you’ll see the link to register with a **welcome bonus** for each platform, along with a quick explanation and a code block to copy and paste.
 
 ---
 
@@ -210,7 +207,6 @@ docker run -d \
 echo "[INFO] Installing MystNode..."
 sudo -E bash -c "$(curl -s https://raw.githubusercontent.com/mysteriumnetwork/node/master/install.sh)"
 ```
-
 > Then open `http://xx.xx.xx.xx:4449` in your browser to configure and activate the account.
 
 ---
