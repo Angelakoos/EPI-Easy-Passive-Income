@@ -6,7 +6,7 @@
 - [ポルトガル語 (PT/BR)](./README.pt.md)
 - [ヒンディー語 (HI)](./README.hi.md)
 - [中国語 (ZH)](./README.zh.md)
-- [日本語 (JA)](./README.ja.md)
+- [日本語 (JA)](./README.ja.md) *(現在の文書)*
 
 # EPI - Easy Passive Income
 
