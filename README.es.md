@@ -1,6 +1,12 @@
 **Disponible en**:
 - [Inglés (EN)](./README.md)
-- [Español (ES)](./README.es.md)
+- [Español (ES)](./README.es.md) *(actual)*
+- [Francés (FR)](./README.fr.md)
+- [Alemán (DE)](./README.de.md)
+- [Portugués (PT/BR)](./README.pt.md)
+- [Hindi (HI)](./README.hi.md)
+- [Chino (ZH)](./README.zh.md)
+- [Japonés (JA)](./README.ja.md)
 
 # EPI - Easy Passive Income
 
