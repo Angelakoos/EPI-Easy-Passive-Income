@@ -5,7 +5,8 @@
 - [德语 (DE)](./README.de.md)
 - [葡萄牙语 (PT/BR)](./README.pt.md)
 - [印地语 (HI)](./README.hi.md)
-- [中文 (ZH)](./README.zh.md)
+- [中文 (ZH)](./README.zh.md) *(当前文档)*
+- [日本語 (JA)](./README.ja.md)
 
 # EPI - Easy Passive Income
 
