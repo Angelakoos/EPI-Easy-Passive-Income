@@ -57,18 +57,6 @@ To use the configuration explained below, you need at least:
 - **10 GB NVMe or SSD**  
 - **Operating System:** Ubuntu 24.04 (Linux)
 
-### Special Offer with IONOS
-
-> #### **IONOS Referral Link**  
-> **I use [IONOS VPS Linux XS](https://aklam.io/hkgdoN) for only €1/month + taxes**, and I have **several** of these VPS.  
->  
-> Each VPS provides a **unique IP**, and you can choose the datacenter between **US**, **Spain**, **Germany**, or **UK**.  
->  
-> **[Click here to use my referral link](https://aklam.io/hkgdoN)**  
-> - Depending on the product you select, you can **receive a bonus from €1 up to €150**.  
-> - For instance, with **VPS Linux XS**, you’ll get **€1 bonus** plus a **30-day trial**.  
-> - If you cancel within those 30 days, **you get a full refund**, so there’s no risk!
-
 ---
 
 ## How to Install
