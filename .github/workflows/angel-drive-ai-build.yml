@@ -1,0 +1,57 @@
+name: Build Angel Drive AI APK
+
+on:
+  push:
+    branches: [ angel-drive-ai-box-mvp ]
+    paths:
+      - 'angel-drive-ai-source.zip.b64'
+      - '.github/workflows/angel-drive-ai-build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore project
+        run: |
+          mkdir -p angel-drive-ai
+          base64 -d angel-drive-ai-source.zip.b64 > angel-drive-ai-source.zip
+          unzip -q angel-drive-ai-source.zip -d angel-drive-ai
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android 35
+        run: yes | sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build APK
+        working-directory: angel-drive-ai
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: Prepare artifact
+        run: |
+          mkdir -p artifact
+          cp angel-drive-ai/app/build/outputs/apk/debug/app-debug.apk artifact/AngelDriveAI-v0.1.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AngelDriveAI-APK
+          path: artifact/AngelDriveAI-v0.1.apk
+          retention-days: 30
