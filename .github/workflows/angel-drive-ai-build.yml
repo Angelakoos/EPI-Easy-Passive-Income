@@ -4,12 +4,12 @@ on:
   push:
     branches: [ angel-drive-ai-box-mvp ]
     paths:
-      - 'angel-drive-ai-source.zip.b64'
+      - 'angel-drive-ai/**'
       - '.github/workflows/angel-drive-ai-build.yml'
   pull_request:
     branches: [ main ]
     paths:
-      - 'angel-drive-ai-source.zip.b64'
+      - 'angel-drive-ai/**'
       - '.github/workflows/angel-drive-ai-build.yml'
   workflow_dispatch:
 
@@ -21,20 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Restore project
-        run: |
-          python3 - <<'PY'
-          import base64, pathlib, zipfile
-          src = pathlib.Path('angel-drive-ai-source.zip.b64')
-          data = base64.b64decode(src.read_text().strip(), validate=True)
-          pathlib.Path('angel-drive-ai-source.zip').write_bytes(data)
-          pathlib.Path('angel-drive-ai').mkdir(exist_ok=True)
-          with zipfile.ZipFile('angel-drive-ai-source.zip') as archive:
-              archive.extractall('angel-drive-ai')
-          print('Decoded bytes:', len(data))
-          print('Project files:', len(list(pathlib.Path('angel-drive-ai').rglob('*'))))
-          PY
 
       - name: Java 17
         uses: actions/setup-java@v4
@@ -68,5 +54,3 @@ jobs:
           name: AngelDriveAI-APK
           path: artifact/AngelDriveAI-v0.1.apk
           retention-days: 30
-
-# pr build trigger
