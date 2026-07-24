@@ -60,3 +60,5 @@ jobs:
           name: AngelDriveAI-APK
           path: artifact/AngelDriveAI-v0.1.apk
           retention-days: 30
+
+# trigger 2026-07-25
