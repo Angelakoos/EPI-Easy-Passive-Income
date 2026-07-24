@@ -6,6 +6,11 @@ on:
     paths:
       - 'angel-drive-ai-source.zip.b64'
       - '.github/workflows/angel-drive-ai-build.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'angel-drive-ai-source.zip.b64'
+      - '.github/workflows/angel-drive-ai-build.yml'
   workflow_dispatch:
 
 jobs:
@@ -64,4 +69,4 @@ jobs:
           path: artifact/AngelDriveAI-v0.1.apk
           retention-days: 30
 
-# restore fix
+# pr build trigger
