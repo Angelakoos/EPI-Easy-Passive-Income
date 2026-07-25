@@ -39,55 +39,6 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Fix map and interface stacking
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          html = Path('angel-drive-ai/app/src/main/assets/index.html')
-          text = html.read_text(encoding='utf-8')
-          marker = '<style id="angel-drive-stacking-fix">'
-          if marker not in text:
-              patch = '''
-          <style id="angel-drive-stacking-fix">
-          html, body {
-            position: relative !important;
-            isolation: isolate !important;
-          }
-          #map {
-            z-index: 0 !important;
-            isolation: isolate !important;
-            overflow: hidden !important;
-          }
-          .overlay {
-            z-index: 999999 !important;
-            isolation: isolate !important;
-            transform: translate3d(0,0,0) !important;
-            -webkit-transform: translate3d(0,0,0) !important;
-            backface-visibility: hidden !important;
-            -webkit-backface-visibility: hidden !important;
-          }
-          .card, .pill, .dock, .speed {
-            z-index: 1000000 !important;
-          }
-          .modal {
-            z-index: 1000010 !important;
-          }
-          .notice {
-            z-index: 1000020 !important;
-          }
-          </style>
-          '''
-              text = text.replace('</head>', patch + '\n</head>')
-              html.write_text(text, encoding='utf-8')
-
-          gradle = Path('angel-drive-ai/app/build.gradle')
-          config = gradle.read_text(encoding='utf-8')
-          config = config.replace('versionCode 1', 'versionCode 2')
-          config = config.replace("versionName '0.1.0'", "versionName '0.2.0'")
-          gradle.write_text(config, encoding='utf-8')
-          PY
-
       - name: Build APK
         working-directory: angel-drive-ai
         run: gradle :app:assembleDebug --stacktrace
@@ -95,11 +46,11 @@ jobs:
       - name: Prepare artifact
         run: |
           mkdir -p artifact
-          cp angel-drive-ai/app/build/outputs/apk/debug/app-debug.apk artifact/AngelDriveAI-v0.2.apk
+          cp angel-drive-ai/app/build/outputs/apk/debug/app-debug.apk artifact/AngelDriveAI-v0.3.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: AngelDriveAI-v0.2-APK
-          path: artifact/AngelDriveAI-v0.2.apk
+          name: AngelDriveAI-v0.3-APK
+          path: artifact/AngelDriveAI-v0.3.apk
           retention-days: 30
