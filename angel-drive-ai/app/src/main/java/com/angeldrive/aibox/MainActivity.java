@@ -7,6 +7,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,67 +23,75 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
 import android.view.WindowManager;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.maplibre.android.MapLibre;
+import org.maplibre.android.annotations.Marker;
+import org.maplibre.android.annotations.MarkerOptions;
+import org.maplibre.android.camera.CameraPosition;
+import org.maplibre.android.camera.CameraUpdateFactory;
+import org.maplibre.android.geometry.LatLng;
+import org.maplibre.android.maps.MapLibreMap;
+import org.maplibre.android.maps.MapView;
+import org.maplibre.android.maps.Style;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends Activity implements LocationListener {
     private static final int LOCATION_REQUEST = 41;
     private static final String SPOTIFY_PACKAGE = "com.spotify.music";
-    private static final String USER_AGENT = "AngelDriveAI/0.3 (personal in-car launcher)";
     private static final AtomicReference<MainActivity> INSTANCE = new AtomicReference<>();
 
-    private WebView webView;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final int bronze = Color.rgb(199, 139, 100);
+    private final int panel = Color.argb(232, 10, 13, 18);
+
+    private MapView mapView;
+    private MapLibreMap map;
+    private Marker userMarker;
     private LocationManager locationManager;
+    private Location lastLocation;
+    private boolean followPosition = true;
+
     private MediaSessionManager mediaSessionManager;
     private MediaController spotifyController;
-    private Location lastLocation;
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private final ExecutorService networkExecutor = Executors.newSingleThreadExecutor();
-    private boolean pageReady = false;
-    private boolean sessionsListenerRegistered = false;
-    private long lastGeocodeRequestAt = 0L;
+    private boolean sessionsListenerRegistered;
 
-    private final Runnable mediaTicker = new Runnable() {
+    private ImageView albumImage;
+    private TextView trackText;
+    private TextView artistText;
+    private TextView mediaStatusText;
+    private TextView playButton;
+    private TextView speedText;
+    private TextView clockText;
+
+    private final Runnable clockTicker = new Runnable() {
         @Override public void run() {
+            if (clockText != null) {
+                clockText.setText(new java.text.SimpleDateFormat("HH:mm", Locale.getDefault()).format(new java.util.Date()));
+            }
             updateMediaUi();
             handler.postDelayed(this, 1000L);
         }
     };
 
-    private final MediaSessionManager.OnActiveSessionsChangedListener sessionsChangedListener = controllers -> connectSpotifySession();
-
     private final MediaController.Callback mediaCallback = new MediaController.Callback() {
         @Override public void onMetadataChanged(MediaMetadata metadata) { updateMediaUi(); }
         @Override public void onPlaybackStateChanged(PlaybackState state) { updateMediaUi(); }
-        @Override public void onSessionDestroyed() { handler.postDelayed(MainActivity.this::connectSpotifySession, 250L); }
+        @Override public void onSessionDestroyed() { handler.postDelayed(MainActivity.this::connectSpotifySession, 300L); }
     };
+
+    private final MediaSessionManager.OnActiveSessionsChangedListener sessionsChangedListener = controllers -> connectSpotifySession();
 
     public static void notifyMediaAccessChanged() {
         MainActivity activity = INSTANCE.get();
@@ -93,83 +104,168 @@ public class MainActivity extends Activity implements LocationListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         enterImmersiveMode();
 
-        webView = new WebView(this);
-        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        setContentView(webView);
-        configureWebView();
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mediaSessionManager = (MediaSessionManager) getSystemService(MEDIA_SESSION_SERVICE);
-        webView.loadUrl("file:///android_asset/index.html");
-        requestLocationIfNeeded();
-    }
-
-    private void configureWebView() {
-        WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setDatabaseEnabled(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);
-        settings.setMediaPlaybackRequiresUserGesture(false);
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
-        settings.setAllowFileAccessFromFileURLs(true);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        settings.setUserAgentString(settings.getUserAgentString() + " AngelDriveAI/0.3");
-        webView.setBackgroundColor(0xFF05070A);
-        webView.addJavascriptInterface(new JsBridge(), "Android");
-        webView.setWebChromeClient(new WebChromeClient());
-        webView.setWebViewClient(new WebViewClient() {
-            @Override public void onPageFinished(WebView view, String url) {
-                pageReady = true;
-                sendSystemState();
-                connectSpotifySession();
-                if (lastLocation != null) onLocationChanged(lastLocation);
-            }
-        });
-    }
-
-    private void enterImmersiveMode() {
-        if (android.os.Build.VERSION.SDK_INT >= 30) {
-            WindowInsetsController controller = getWindow().getInsetsController();
-            if (controller != null) {
-                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-            }
-        } else {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        try {
+            MapLibre.getInstance(this);
+            createUi(savedInstanceState);
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            mediaSessionManager = (MediaSessionManager) getSystemService(MEDIA_SESSION_SERVICE);
+            requestLocationIfNeeded();
+        } catch (Throwable error) {
+            showSafeFallback(error);
         }
     }
 
-    @Override public void onWindowFocusChanged(boolean hasFocus) { super.onWindowFocusChanged(hasFocus); if (hasFocus) enterImmersiveMode(); }
+    private void createUi(Bundle savedInstanceState) {
+        FrameLayout root = new FrameLayout(this);
+        root.setBackgroundColor(Color.rgb(5, 7, 10));
+        setContentView(root);
 
-    @Override protected void onResume() {
-        super.onResume();
-        INSTANCE.set(this);
-        enterImmersiveMode();
-        startLocationUpdates();
-        registerSessionsListener();
-        connectSpotifySession();
-        handler.removeCallbacks(mediaTicker);
-        handler.post(mediaTicker);
+        mapView = new MapView(this);
+        mapView.onCreate(savedInstanceState);
+        root.addView(mapView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        mapView.getMapAsync(mapLibreMap -> {
+            map = mapLibreMap;
+            map.getUiSettings().setCompassEnabled(false);
+            map.getUiSettings().setLogoEnabled(false);
+            map.getUiSettings().setAttributionEnabled(false);
+            map.setStyle(new Style.Builder().fromUri("https://tiles.openfreemap.org/styles/dark"), style -> {
+                if (lastLocation != null) updateMapLocation(lastLocation, true);
+            });
+            map.addOnMoveListener(new MapLibreMap.OnMoveListener() {
+                @Override public void onMoveBegin(org.maplibre.android.gestures.MoveGestureDetector detector) { followPosition = false; }
+                @Override public void onMove(org.maplibre.android.gestures.MoveGestureDetector detector) { }
+                @Override public void onMoveEnd(org.maplibre.android.gestures.MoveGestureDetector detector) { }
+            });
+        });
+
+        root.addView(buildNavigationCard(), position(dp(28), dp(28), dp(380), dp(142), Gravity.TOP | Gravity.START));
+        root.addView(buildSpotifyCard(), position(dp(28), dp(28), dp(430), dp(178), Gravity.TOP | Gravity.END));
+        root.addView(buildBottomDock(), position(0, dp(22), dp(480), dp(84), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL));
+        root.addView(buildSpeedPill(), position(0, dp(122), dp(190), dp(48), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL));
+        root.addView(buildStatusPill(), position(dp(28), dp(30), dp(180), dp(52), Gravity.BOTTOM | Gravity.END));
     }
 
-    @Override protected void onPause() {
-        super.onPause();
-        stopLocationUpdates();
-        unregisterSessionsListener();
-        handler.removeCallbacks(mediaTicker);
+    private View buildNavigationCard() {
+        LinearLayout card = verticalPanel(22);
+        card.setPadding(dp(22), dp(18), dp(22), dp(16));
+        card.setOnClickListener(v -> openGoogleMaps());
+
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        TextView arrow = label("↱", 42, Color.WHITE, Typeface.BOLD);
+        TextView text = label("Abrir navegación\nGoogle Maps o Waze", 20, Color.WHITE, Typeface.BOLD);
+        text.setPadding(dp(18), 0, 0, 0);
+        row.addView(arrow, new LinearLayout.LayoutParams(dp(56), LinearLayout.LayoutParams.WRAP_CONTENT));
+        row.addView(text, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        card.addView(row);
+        TextView subtitle = label("El mapa muestra tu GPS real. Pulsa para elegir navegador.", 13, Color.rgb(195, 200, 208), Typeface.NORMAL);
+        subtitle.setPadding(0, dp(12), 0, 0);
+        card.addView(subtitle);
+        return card;
     }
 
-    @Override protected void onDestroy() {
-        unregisterSessionsListener();
-        detachSpotifyController();
-        handler.removeCallbacksAndMessages(null);
-        networkExecutor.shutdownNow();
-        if (webView != null) webView.destroy();
-        INSTANCE.compareAndSet(this, null);
-        super.onDestroy();
+    private View buildSpotifyCard() {
+        LinearLayout card = verticalPanel(22);
+        card.setPadding(dp(18), dp(14), dp(18), dp(12));
+        card.setOnClickListener(v -> {
+            if (!hasNotificationAccess()) startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+            else launchPackageOrStore(SPOTIFY_PACKAGE);
+        });
+
+        TextView title = label("●  Spotify", 14, Color.WHITE, Typeface.BOLD);
+        title.setTextColor(Color.rgb(30, 215, 96));
+        card.addView(title);
+
+        LinearLayout mediaRow = new LinearLayout(this);
+        mediaRow.setOrientation(LinearLayout.HORIZONTAL);
+        mediaRow.setGravity(Gravity.CENTER_VERTICAL);
+        mediaRow.setPadding(0, dp(10), 0, dp(7));
+
+        albumImage = new ImageView(this);
+        albumImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        albumImage.setImageDrawable(roundRect(Color.rgb(30, 215, 96), 12, 0, 0));
+        mediaRow.addView(albumImage, new LinearLayout.LayoutParams(dp(66), dp(66)));
+
+        LinearLayout titles = new LinearLayout(this);
+        titles.setOrientation(LinearLayout.VERTICAL);
+        titles.setPadding(dp(14), 0, 0, 0);
+        trackText = label("Activa el acceso multimedia", 18, Color.WHITE, Typeface.BOLD);
+        trackText.setSingleLine(true);
+        artistText = label("Pulsa la tarjeta para configurarlo", 14, Color.rgb(190, 196, 204), Typeface.NORMAL);
+        artistText.setSingleLine(true);
+        titles.addView(trackText);
+        titles.addView(artistText);
+        mediaRow.addView(titles, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        card.addView(mediaRow);
+
+        LinearLayout controls = new LinearLayout(this);
+        controls.setGravity(Gravity.CENTER);
+        TextView previous = mediaButton("◀");
+        playButton = mediaButton("▶");
+        TextView next = mediaButton("▶");
+        previous.setOnClickListener(v -> performMediaAction("previous"));
+        playButton.setOnClickListener(v -> performMediaAction("toggle"));
+        next.setOnClickListener(v -> performMediaAction("next"));
+        controls.addView(previous, new LinearLayout.LayoutParams(dp(86), dp(44)));
+        controls.addView(playButton, new LinearLayout.LayoutParams(dp(86), dp(44)));
+        controls.addView(next, new LinearLayout.LayoutParams(dp(86), dp(44)));
+        card.addView(controls);
+
+        mediaStatusText = label("", 11, Color.rgb(165, 171, 180), Typeface.NORMAL);
+        mediaStatusText.setGravity(Gravity.CENTER);
+        card.addView(mediaStatusText);
+        return card;
+    }
+
+    private View buildBottomDock() {
+        LinearLayout dock = horizontalPanel(28);
+        dock.setGravity(Gravity.CENTER);
+        dock.setPadding(dp(10), dp(8), dp(10), dp(8));
+        dock.addView(dockButton("▦", v -> openAppChooser()));
+        dock.addView(dockButton("◉", v -> openAssistant()));
+        dock.addView(dockButton("⌖", v -> recenterMap()));
+        dock.addView(dockButton("≋", v -> launchPackageOrStore(SPOTIFY_PACKAGE)));
+        dock.addView(dockButton("⚙", v -> openSettingsMenu()));
+        return dock;
+    }
+
+    private View buildSpeedPill() {
+        speedText = label("GPS · esperando ubicación", 15, Color.WHITE, Typeface.BOLD);
+        speedText.setGravity(Gravity.CENTER);
+        speedText.setBackground(roundRect(Color.argb(220, 5, 8, 12), 18, Color.argb(90, 80, 150, 255), 1));
+        speedText.setOnClickListener(v -> recenterMap());
+        return speedText;
+    }
+
+    private View buildStatusPill() {
+        LinearLayout pill = horizontalPanel(26);
+        pill.setGravity(Gravity.CENTER);
+        TextView signal = label("▂▄▆█   4G", 14, Color.WHITE, Typeface.NORMAL);
+        clockText = label("--:--", 18, Color.WHITE, Typeface.BOLD);
+        clockText.setPadding(dp(18), 0, 0, 0);
+        pill.addView(signal);
+        pill.addView(clockText);
+        return pill;
+    }
+
+    private void showSafeFallback(Throwable error) {
+        LinearLayout fallback = new LinearLayout(this);
+        fallback.setOrientation(LinearLayout.VERTICAL);
+        fallback.setGravity(Gravity.CENTER);
+        fallback.setPadding(dp(34), dp(34), dp(34), dp(34));
+        fallback.setBackgroundColor(Color.rgb(5, 7, 10));
+        TextView title = label("Ángel Drive", 32, Color.WHITE, Typeface.BOLD);
+        TextView message = label("El mapa no pudo iniciarse, pero la aplicación sigue abierta.\n\nActualiza Android System WebView y reinicia la aplicación.", 18, Color.rgb(205, 210, 218), Typeface.NORMAL);
+        message.setGravity(Gravity.CENTER);
+        TextView maps = actionButton("Abrir Google Maps", this::openGoogleMaps);
+        TextView spotify = actionButton("Abrir Spotify", () -> launchPackageOrStore(SPOTIFY_PACKAGE));
+        fallback.addView(title);
+        fallback.addView(message, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(150)));
+        fallback.addView(maps, new LinearLayout.LayoutParams(dp(280), dp(58)));
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(dp(280), dp(58)); p.topMargin = dp(14);
+        fallback.addView(spotify, p);
+        setContentView(fallback);
     }
 
     private void requestLocationIfNeeded() {
@@ -182,35 +278,79 @@ public class MainActivity extends Activity implements LocationListener {
         if (locationManager == null) return;
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) return;
         try {
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 1f, this);
-            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000L, 5f, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 1f, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000L, 5f, this);
             Location last = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (last == null) last = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (last != null) onLocationChanged(last);
-        } catch (SecurityException ignored) { }
+        } catch (Exception ignored) { }
     }
 
     private void stopLocationUpdates() {
-        if (locationManager != null) try { locationManager.removeUpdates(this); } catch (SecurityException ignored) { }
+        try { if (locationManager != null) locationManager.removeUpdates(this); } catch (Exception ignored) { }
     }
 
     @Override public void onLocationChanged(Location location) {
         if (location == null) return;
         lastLocation = location;
-        if (!pageReady) return;
-        double speedKmh = location.hasSpeed() ? location.getSpeed() * 3.6d : 0d;
-        double bearing = location.hasBearing() ? location.getBearing() : 0d;
-        evaluate(String.format(Locale.US, "window.AngelDrive&&window.AngelDrive.updateLocation(%f,%f,%f,%f);", location.getLatitude(), location.getLongitude(), speedKmh, bearing));
+        double speed = location.hasSpeed() ? location.getSpeed() * 3.6d : 0d;
+        if (speedText != null) speedText.setText(String.format(Locale.getDefault(), "GPS · %.0f km/h", speed));
+        updateMapLocation(location, false);
     }
 
-    @Override public void onProviderEnabled(String provider) { }
-    @Override public void onProviderDisabled(String provider) { }
+    private void updateMapLocation(Location location, boolean force) {
+        if (map == null) return;
+        LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+        if (userMarker == null) userMarker = map.addMarker(new MarkerOptions().position(point).title("Tu posición"));
+        else userMarker.setPosition(point);
+        if (followPosition || force) {
+            float bearing = location.hasBearing() ? location.getBearing() : 0f;
+            CameraPosition camera = new CameraPosition.Builder().target(point).zoom(16.5).tilt(52).bearing(bearing).build();
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(camera), 700);
+        }
+    }
+
+    private void recenterMap() {
+        followPosition = true;
+        if (lastLocation != null) updateMapLocation(lastLocation, true);
+        else Toast.makeText(this, "Esperando una posición GPS", Toast.LENGTH_SHORT).show();
+    }
 
     private ComponentName listenerComponent() { return new ComponentName(this, MediaListenerService.class); }
 
     private boolean hasNotificationAccess() {
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        return manager != null && manager.isNotificationListenerAccessGranted(listenerComponent());
+        try {
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            return manager != null && manager.isNotificationListenerAccessGranted(listenerComponent());
+        } catch (Throwable ignored) {
+            String enabled = Settings.Secure.getString(getContentResolver(), "enabled_notification_listeners");
+            return enabled != null && enabled.contains(getPackageName());
+        }
+    }
+
+    private void connectSpotifySession() {
+        if (mediaSessionManager == null) return;
+        if (!hasNotificationAccess()) {
+            detachSpotifyController();
+            updateMediaUi();
+            return;
+        }
+        registerSessionsListener();
+        try {
+            MediaController selected = null;
+            List<MediaController> sessions = mediaSessionManager.getActiveSessions(listenerComponent());
+            for (MediaController controller : sessions) {
+                if (SPOTIFY_PACKAGE.equals(controller.getPackageName())) { selected = controller; break; }
+            }
+            if (selected != spotifyController) {
+                detachSpotifyController();
+                spotifyController = selected;
+                if (spotifyController != null) spotifyController.registerCallback(mediaCallback, handler);
+            }
+        } catch (Throwable ignored) {
+            detachSpotifyController();
+        }
+        updateMediaUi();
     }
 
     private void registerSessionsListener() {
@@ -218,175 +358,220 @@ public class MainActivity extends Activity implements LocationListener {
         try {
             mediaSessionManager.addOnActiveSessionsChangedListener(sessionsChangedListener, listenerComponent(), handler);
             sessionsListenerRegistered = true;
-        } catch (SecurityException ignored) { }
+        } catch (Throwable ignored) { }
     }
 
     private void unregisterSessionsListener() {
-        if (mediaSessionManager != null && sessionsListenerRegistered) try { mediaSessionManager.removeOnActiveSessionsChangedListener(sessionsChangedListener); } catch (Exception ignored) { }
+        if (mediaSessionManager != null && sessionsListenerRegistered) {
+            try { mediaSessionManager.removeOnActiveSessionsChangedListener(sessionsChangedListener); } catch (Throwable ignored) { }
+        }
         sessionsListenerRegistered = false;
     }
 
     private void detachSpotifyController() {
-        if (spotifyController != null) try { spotifyController.unregisterCallback(mediaCallback); } catch (Exception ignored) { }
+        if (spotifyController != null) {
+            try { spotifyController.unregisterCallback(mediaCallback); } catch (Throwable ignored) { }
+        }
         spotifyController = null;
     }
 
-    private void connectSpotifySession() {
-        registerSessionsListener();
-        if (mediaSessionManager == null || !hasNotificationAccess()) {
-            detachSpotifyController();
-            sendSystemState();
-            updateMediaUi();
+    private void updateMediaUi() {
+        if (trackText == null || artistText == null || playButton == null) return;
+        if (!hasNotificationAccess()) {
+            trackText.setText("Activa el acceso multimedia");
+            artistText.setText("Pulsa la tarjeta para configurarlo");
+            mediaStatusText.setText("Spotify real, sin datos inventados");
+            playButton.setText("▶");
+            albumImage.setImageDrawable(roundRect(Color.rgb(30, 215, 96), 12, 0, 0));
             return;
         }
-        try {
-            List<MediaController> sessions = mediaSessionManager.getActiveSessions(listenerComponent());
-            MediaController selected = null;
-            for (MediaController controller : sessions) if (SPOTIFY_PACKAGE.equals(controller.getPackageName())) { selected = controller; break; }
-            boolean changed = selected == null || spotifyController == null || !selected.getSessionToken().equals(spotifyController.getSessionToken());
-            if (changed) {
-                detachSpotifyController();
-                spotifyController = selected;
-                if (spotifyController != null) spotifyController.registerCallback(mediaCallback, handler);
-            }
-        } catch (SecurityException ignored) { detachSpotifyController(); }
-        sendSystemState();
-        updateMediaUi();
-    }
-
-    private void updateMediaUi() {
-        if (!pageReady) return;
-        boolean access = hasNotificationAccess();
-        boolean connected = spotifyController != null;
-        String title = "", artist = "", artwork = "";
-        boolean playing = false;
-        long duration = 0L, position = 0L;
-        if (connected) {
-            MediaMetadata metadata = spotifyController.getMetadata();
-            PlaybackState state = spotifyController.getPlaybackState();
-            if (metadata != null) {
-                CharSequence t = metadata.getText(MediaMetadata.METADATA_KEY_TITLE);
-                CharSequence a = metadata.getText(MediaMetadata.METADATA_KEY_ARTIST);
-                if (t != null) title = t.toString();
-                if (a != null) artist = a.toString();
-                duration = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION);
-                Bitmap art = metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
-                if (art == null) art = metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
-                if (art == null && metadata.getDescription() != null) art = metadata.getDescription().getIconBitmap();
-                if (art != null) artwork = bitmapToDataUri(art);
-            }
-            if (state != null) {
-                playing = state.getState() == PlaybackState.STATE_PLAYING;
-                position = Math.max(0L, state.getPosition());
-                if (playing && state.getLastPositionUpdateTime() > 0) position += (long) ((android.os.SystemClock.elapsedRealtime() - state.getLastPositionUpdateTime()) * state.getPlaybackSpeed());
-                if (duration > 0) position = Math.min(position, duration);
-            }
+        if (spotifyController == null) {
+            trackText.setText("Spotify no está reproduciendo");
+            artistText.setText("Abre Spotify e inicia una canción");
+            mediaStatusText.setText("Esperando sesión multimedia");
+            playButton.setText("▶");
+            return;
         }
-        evaluate("window.AngelDrive&&window.AngelDrive.updateMedia(" + access + "," + connected + "," + JSONObject.quote(title) + "," + JSONObject.quote(artist) + "," + playing + "," + position + "," + duration + "," + JSONObject.quote(artwork) + ");");
-    }
 
-    private String bitmapToDataUri(Bitmap bitmap) {
-        try {
-            Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 180, 180, true);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            scaled.compress(Bitmap.CompressFormat.JPEG, 85, stream);
-            return "data:image/jpeg;base64," + android.util.Base64.encodeToString(stream.toByteArray(), android.util.Base64.NO_WRAP);
-        } catch (Exception ignored) { return ""; }
+        MediaMetadata metadata = spotifyController.getMetadata();
+        PlaybackState state = spotifyController.getPlaybackState();
+        String title = "Spotify";
+        String artist = "";
+        Bitmap art = null;
+        if (metadata != null) {
+            CharSequence t = metadata.getText(MediaMetadata.METADATA_KEY_TITLE);
+            CharSequence a = metadata.getText(MediaMetadata.METADATA_KEY_ARTIST);
+            if (t != null && t.length() > 0) title = t.toString();
+            if (a != null) artist = a.toString();
+            art = metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
+            if (art == null) art = metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
+        }
+        trackText.setText(title);
+        artistText.setText(artist);
+        if (art != null) albumImage.setImageBitmap(art);
+        boolean playing = state != null && state.getState() == PlaybackState.STATE_PLAYING;
+        playButton.setText(playing ? "Ⅱ" : "▶");
+        mediaStatusText.setText(playing ? "Reproduciendo" : "Pausado");
     }
-
-    private void sendSystemState() { if (pageReady) evaluate("window.AngelDrive&&window.AngelDrive.setSystemState(" + hasNotificationAccess() + ");"); }
-    private void evaluate(String script) { handler.post(() -> { if (webView != null && pageReady) webView.evaluateJavascript(script, null); }); }
 
     private void performMediaAction(String action) {
-        if (spotifyController != null) {
-            MediaController.TransportControls controls = spotifyController.getTransportControls();
-            switch (action) {
-                case "previous" -> controls.skipToPrevious();
-                case "next" -> controls.skipToNext();
-                case "play" -> controls.play();
-                case "pause" -> controls.pause();
-                default -> { PlaybackState state = spotifyController.getPlaybackState(); if (state != null && state.getState() == PlaybackState.STATE_PLAYING) controls.pause(); else controls.play(); }
+        try {
+            if (spotifyController != null) {
+                MediaController.TransportControls controls = spotifyController.getTransportControls();
+                if ("previous".equals(action)) controls.skipToPrevious();
+                else if ("next".equals(action)) controls.skipToNext();
+                else {
+                    PlaybackState state = spotifyController.getPlaybackState();
+                    if (state != null && state.getState() == PlaybackState.STATE_PLAYING) controls.pause(); else controls.play();
+                }
+                return;
             }
-            return;
-        }
-        int keyCode = switch (action) { case "previous" -> KeyEvent.KEYCODE_MEDIA_PREVIOUS; case "next" -> KeyEvent.KEYCODE_MEDIA_NEXT; case "play" -> KeyEvent.KEYCODE_MEDIA_PLAY; case "pause" -> KeyEvent.KEYCODE_MEDIA_PAUSE; default -> KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE; };
-        AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        if (audioManager != null) { audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode)); audioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyCode)); }
+            int code = "previous".equals(action) ? KeyEvent.KEYCODE_MEDIA_PREVIOUS : "next".equals(action) ? KeyEvent.KEYCODE_MEDIA_NEXT : KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE;
+            AudioManager audio = (AudioManager) getSystemService(AUDIO_SERVICE);
+            if (audio != null) {
+                audio.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, code));
+                audio.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, code));
+            }
+        } catch (Throwable ignored) { }
+    }
+
+    private void openGoogleMaps() {
+        Intent chooser = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q="));
+        try { startActivity(Intent.createChooser(chooser, "Abrir navegación")); }
+        catch (Exception e) { launchPackageOrStore("com.google.android.apps.maps"); }
+    }
+
+    private void openAppChooser() {
+        Intent home = new Intent(Intent.ACTION_MAIN);
+        home.addCategory(Intent.CATEGORY_APP_MARKET);
+        try { startActivity(new Intent(Settings.ACTION_SETTINGS)); }
+        catch (Exception ignored) { }
+    }
+
+    private void openSettingsMenu() {
+        try { startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)); }
+        catch (Exception e) { startActivity(new Intent(Settings.ACTION_SETTINGS)); }
+    }
+
+    private void openAssistant() {
+        try { startActivity(new Intent(Intent.ACTION_VOICE_COMMAND)); }
+        catch (Exception e) { Toast.makeText(this, "No se encontró un asistente", Toast.LENGTH_SHORT).show(); }
     }
 
     private void launchPackageOrStore(String packageName) {
-        Intent launch = getPackageManager().getLaunchIntentForPackage(packageName);
-        if (launch != null) { launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); startActivity(launch); }
-        else try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName))); } catch (Exception e) { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName))); }
-    }
-
-    private void openWaze() {
-        try { Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("waze://?navigate=yes")); intent.setPackage("com.waze"); startActivity(intent); }
-        catch (Exception e) { launchPackageOrStore("com.waze"); }
-    }
-
-    private void navigate(String app, double lat, double lon, String label) {
         try {
-            if ("waze".equals(app)) { Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(Locale.US, "https://waze.com/ul?ll=%f,%f&navigate=yes", lat, lon))); intent.setPackage("com.waze"); startActivity(intent); }
-            else { Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(Locale.US, "google.navigation:q=%f,%f&mode=d", lat, lon))); intent.setPackage("com.google.android.apps.maps"); startActivity(intent); }
-        } catch (Exception e) { launchPackageOrStore("waze".equals(app) ? "com.waze" : "com.google.android.apps.maps"); }
+            Intent launch = getPackageManager().getLaunchIntentForPackage(packageName);
+            if (launch != null) { startActivity(launch); return; }
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+        } catch (Exception e) {
+            try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName))); }
+            catch (Exception ignored) { }
+        }
     }
 
-    private void openAssistant() { try { startActivity(new Intent(Intent.ACTION_VOICE_COMMAND)); } catch (Exception e) { Toast.makeText(this, "No se encontró un asistente de voz", Toast.LENGTH_SHORT).show(); } }
-    private void chooseHomeApp() { try { startActivity(new Intent(Settings.ACTION_HOME_SETTINGS)); } catch (Exception e) { Intent home = new Intent(Intent.ACTION_MAIN); home.addCategory(Intent.CATEGORY_HOME); startActivity(Intent.createChooser(home, "Elegir pantalla de inicio")); } }
-
-    private String httpGet(String urlString) throws Exception {
-        HttpURLConnection connection = (HttpURLConnection) new URL(urlString).openConnection();
-        connection.setConnectTimeout(12000); connection.setReadTimeout(18000); connection.setRequestMethod("GET"); connection.setRequestProperty("User-Agent", USER_AGENT); connection.setRequestProperty("Accept", "application/json"); connection.setRequestProperty("Accept-Language", "es-ES,es;q=0.9,en;q=0.5");
-        int code = connection.getResponseCode();
-        InputStream stream = code >= 200 && code < 300 ? connection.getInputStream() : connection.getErrorStream();
-        StringBuilder result = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) { String line; while ((line = reader.readLine()) != null) result.append(line); }
-        finally { connection.disconnect(); }
-        if (code < 200 || code >= 300) throw new IllegalStateException("HTTP " + code);
-        return result.toString();
+    private LinearLayout verticalPanel(int radius) {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setBackground(roundRect(panel, radius, Color.argb(75, 231, 181, 143), 1));
+        return layout;
     }
 
-    private void searchDestinationNetwork(String query) {
-        long now = System.currentTimeMillis();
-        if (now - lastGeocodeRequestAt < 1100L) { evaluate("window.AngelDrive.onSearchResult(false,0,0,'','Espera un segundo antes de volver a buscar.');"); return; }
-        lastGeocodeRequestAt = now;
-        networkExecutor.execute(() -> {
-            try {
-                String encoded = URLEncoder.encode(query, StandardCharsets.UTF_8);
-                JSONArray items = new JSONArray(httpGet("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&addressdetails=0&q=" + encoded));
-                if (items.length() == 0) { evaluate("window.AngelDrive.onSearchResult(false,0,0,'','No se encontró ese destino.');"); return; }
-                JSONObject item = items.getJSONObject(0);
-                evaluate(String.format(Locale.US, "window.AngelDrive.onSearchResult(true,%f,%f,%s,'');", item.getDouble("lat"), item.getDouble("lon"), JSONObject.quote(item.optString("display_name", query))));
-            } catch (Exception e) { evaluate("window.AngelDrive.onSearchResult(false,0,0,'','Error de conexión al buscar el destino.');"); }
-        });
+    private LinearLayout horizontalPanel(int radius) {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+        layout.setBackground(roundRect(panel, radius, Color.argb(75, 231, 181, 143), 1));
+        return layout;
     }
 
-    private void routeToNetwork(double destLat, double destLon, String label) {
-        Location origin = lastLocation;
-        if (origin == null) { evaluate("window.AngelDrive.onRouteResult(false,'','Aún no hay una posición GPS válida.');"); return; }
-        networkExecutor.execute(() -> {
-            try {
-                String url = String.format(Locale.US, "https://router.project-osrm.org/route/v1/driving/%f,%f;%f,%f?overview=full&geometries=geojson&steps=true&alternatives=false", origin.getLongitude(), origin.getLatitude(), destLon, destLat);
-                JSONObject root = new JSONObject(httpGet(url));
-                if (!"Ok".equals(root.optString("code")) || root.getJSONArray("routes").length() == 0) { evaluate("window.AngelDrive.onRouteResult(false,'','No se encontró una ruta por carretera.');"); return; }
-                JSONObject route = root.getJSONArray("routes").getJSONObject(0), output = new JSONObject();
-                output.put("distance", route.optDouble("distance", 0)); output.put("duration", route.optDouble("duration", 0)); output.put("geometry", route.getJSONObject("geometry"));
-                JSONArray outputSteps = new JSONArray(), legs = route.optJSONArray("legs");
-                if (legs != null) for (int l = 0; l < legs.length(); l++) { JSONArray steps = legs.getJSONObject(l).optJSONArray("steps"); if (steps == null) continue; for (int i = 0; i < steps.length(); i++) { JSONObject step = steps.getJSONObject(i), maneuver = step.optJSONObject("maneuver"); JSONArray location = maneuver != null ? maneuver.optJSONArray("location") : null; if (location == null || location.length() < 2) continue; JSONObject compact = new JSONObject(); compact.put("lon", location.getDouble(0)); compact.put("lat", location.getDouble(1)); compact.put("type", maneuver.optString("type", "turn")); compact.put("modifier", maneuver.optString("modifier", "straight")); compact.put("name", step.optString("name", "")); compact.put("distance", step.optDouble("distance", 0)); compact.put("duration", step.optDouble("duration", 0)); outputSteps.put(compact); } }
-                output.put("steps", outputSteps); output.put("label", label);
-                evaluate("window.AngelDrive.onRouteResult(true," + JSONObject.quote(output.toString()) + ",'');");
-            } catch (JSONException e) { evaluate("window.AngelDrive.onRouteResult(false,'','La respuesta de rutas no era válida.');"); }
-            catch (Exception e) { evaluate("window.AngelDrive.onRouteResult(false,'','Error de conexión al calcular la ruta.');"); }
-        });
+    private TextView label(String text, int sp, int color, int style) {
+        TextView view = new TextView(this);
+        view.setText(text);
+        view.setTextSize(sp);
+        view.setTextColor(color);
+        view.setTypeface(Typeface.DEFAULT, style);
+        return view;
     }
 
-    public class JsBridge {
-        @JavascriptInterface public void open(String target) { runOnUiThread(() -> { switch (target) { case "waze" -> openWaze(); case "spotify" -> launchPackageOrStore(SPOTIFY_PACKAGE); case "maps" -> launchPackageOrStore("com.google.android.apps.maps"); case "android-settings" -> startActivity(new Intent(Settings.ACTION_SETTINGS)); case "assistant" -> openAssistant(); case "home-settings" -> chooseHomeApp(); case "notification-access" -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)); case "location-settings" -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)); case "exit" -> finish(); default -> Toast.makeText(MainActivity.this, "Acción no disponible", Toast.LENGTH_SHORT).show(); } }); }
-        @JavascriptInterface public void media(String action) { runOnUiThread(() -> performMediaAction(action)); }
-        @JavascriptInterface public void requestLocation() { runOnUiThread(MainActivity.this::requestLocationIfNeeded); }
-        @JavascriptInterface public void searchDestination(String query) { searchDestinationNetwork(query == null ? "" : query.trim()); }
-        @JavascriptInterface public void routeTo(double lat, double lon, String label) { routeToNetwork(lat, lon, label == null ? "Destino" : label); }
-        @JavascriptInterface public void navigate(String app, double lat, double lon, String label) { runOnUiThread(() -> MainActivity.this.navigate(app, lat, lon, label)); }
+    private TextView mediaButton(String text) {
+        TextView button = label(text, 22, Color.WHITE, Typeface.BOLD);
+        button.setGravity(Gravity.CENTER);
+        return button;
+    }
+
+    private TextView dockButton(String text, View.OnClickListener listener) {
+        TextView button = label(text, 27, Color.WHITE, Typeface.BOLD);
+        button.setGravity(Gravity.CENTER);
+        button.setBackground(roundRect(Color.argb(80, 255, 255, 255), 20, 0, 0));
+        button.setOnClickListener(listener);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(76), dp(64));
+        params.setMargins(dp(7), 0, dp(7), 0);
+        button.setLayoutParams(params);
+        return button;
+    }
+
+    private TextView actionButton(String text, Runnable action) {
+        TextView button = label(text, 17, Color.rgb(15, 15, 15), Typeface.BOLD);
+        button.setGravity(Gravity.CENTER);
+        button.setBackground(roundRect(bronze, 16, 0, 0));
+        button.setOnClickListener(v -> action.run());
+        return button;
+    }
+
+    private GradientDrawable roundRect(int fill, int radiusDp, int stroke, int strokeWidthDp) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(fill);
+        drawable.setCornerRadius(dp(radiusDp));
+        if (strokeWidthDp > 0) drawable.setStroke(dp(strokeWidthDp), stroke);
+        return drawable;
+    }
+
+    private FrameLayout.LayoutParams position(int horizontalMargin, int verticalMargin, int width, int height, int gravity) {
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height, gravity);
+        params.setMargins(horizontalMargin, verticalMargin, horizontalMargin, verticalMargin);
+        return params;
+    }
+
+    private int dp(int value) { return Math.round(value * getResources().getDisplayMetrics().density); }
+
+    private void enterImmersiveMode() {
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        INSTANCE.set(this);
+        enterImmersiveMode();
+        if (mapView != null) mapView.onResume();
+        startLocationUpdates();
+        connectSpotifySession();
+        handler.removeCallbacks(clockTicker);
+        handler.post(clockTicker);
+    }
+
+    @Override protected void onPause() {
+        if (mapView != null) mapView.onPause();
+        stopLocationUpdates();
+        unregisterSessionsListener();
+        handler.removeCallbacks(clockTicker);
+        super.onPause();
+    }
+
+    @Override protected void onStart() { super.onStart(); if (mapView != null) mapView.onStart(); }
+    @Override protected void onStop() { if (mapView != null) mapView.onStop(); super.onStop(); }
+    @Override public void onLowMemory() { super.onLowMemory(); if (mapView != null) mapView.onLowMemory(); }
+    @Override protected void onSaveInstanceState(Bundle outState) { super.onSaveInstanceState(outState); if (mapView != null) mapView.onSaveInstanceState(outState); }
+
+    @Override protected void onDestroy() {
+        unregisterSessionsListener();
+        detachSpotifyController();
+        handler.removeCallbacksAndMessages(null);
+        if (mapView != null) mapView.onDestroy();
+        INSTANCE.compareAndSet(this, null);
+        super.onDestroy();
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_REQUEST) startLocationUpdates();
     }
 }
