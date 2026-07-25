@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="theme-color" content="#05070a" />
+<title>Ángel Drive AI</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.16.0/dist/maplibre-gl.css" />
+<script src="https://unpkg.com/maplibre-gl@5.16.0/dist/maplibre-gl.js"></script>
+<style>
+:root{--bronze:#c78b64;--bronze2:#e7b58f;--glass:rgba(8,11,15,.88);--line:rgba(215,161,118,.38);--text:#f5f7fa;--muted:#b9bec7;--blue:#1686ff;--green:#1ed760}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05070a;color:var(--text);font-family:Inter,Roboto,Arial,sans-serif;position:relative;isolation:isolate}
+button,input{font:inherit}
+#map{position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 42%,#172132 0,#070b11 55%,#020305 100%);isolation:isolate;overflow:hidden}
+.maplibregl-canvas{outline:none}.maplibregl-ctrl-attrib{font-size:8px!important;background:rgba(4,6,9,.64)!important;color:#aab0b8!important;border-radius:8px!important}.maplibregl-ctrl-attrib a{color:#c5cad0!important}
+.overlay{position:absolute;inset:0;z-index:1000;pointer-events:none;isolation:isolate;transform:translate3d(0,0,0)}
+.card,.pill,.dock{pointer-events:auto;background:linear-gradient(145deg,rgba(13,16,21,.95),rgba(5,8,11,.84));border:1px solid rgba(231,181,143,.23);box-shadow:0 16px 45px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.05);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.nav-card{position:absolute;left:3.2vw;top:4.2vh;width:28vw;min-width:330px;border-radius:22px;padding:2.15vh 1.8vw;cursor:pointer}
+.turn-row{display:flex;gap:1.3vw;align-items:center}.turn-arrow{font-size:5.2vh;font-weight:700;line-height:1;color:white;min-width:4.4vw;text-align:center}.nav-distance{font-size:2.5vh;font-weight:700}.nav-road{font-size:2.15vh;margin-top:.45vh;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:19vw}.nav-next{border-top:1px solid rgba(255,255,255,.1);margin-top:1.6vh;padding-top:1.2vh;color:#c8ccd2;font-size:1.55vh;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.media-card{position:absolute;right:3.2vw;top:4.2vh;width:31vw;min-width:390px;border-radius:22px;padding:1.45vh 1.3vw 1.15vh;cursor:pointer}.media-head{display:flex;align-items:center;gap:.55vw;font-size:1.55vh}.spotify-dot{width:1.8vh;height:1.8vh;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(30,215,96,.3)}.media-main{display:grid;grid-template-columns:6.8vh 1fr;gap:.9vw;align-items:center;margin-top:.9vh}.album{width:6.8vh;height:6.8vh;border-radius:10px;background:linear-gradient(145deg,#1ed760,#07110a);background-size:cover;background-position:center;box-shadow:0 0 20px rgba(0,0,0,.3);display:grid;place-items:center;font-size:3vh;color:#07110a}.track{font-size:1.9vh;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.artist{font-size:1.5vh;color:#c1c6ce;margin-top:.35vh;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.progress{height:3px;background:rgba(255,255,255,.20);border-radius:999px;margin-top:1vh;overflow:hidden}.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#fff)}.times{display:flex;justify-content:space-between;font-size:1.2vh;color:#c6cad0;margin-top:.35vh}.media-controls{display:flex;align-items:center;justify-content:center;gap:3.5vw;margin-top:.05vh}.media-btn{border:0;background:transparent;color:#fff;font-size:2.5vh;padding:.45vh .9vw;cursor:pointer}.play{width:4.5vh;height:4.5vh;border-radius:50%;background:#f2f2f2;color:#111;display:grid;place-items:center;font-size:1.85vh;box-shadow:0 8px 20px rgba(0,0,0,.3)}.media-controls.disabled{opacity:.35;pointer-events:none}
+.trip-card{position:absolute;left:3.2vw;bottom:15vh;display:none;gap:2.1vw;border-radius:19px;padding:1.3vh 1.55vw;min-width:285px;cursor:pointer}.trip-card.show{display:flex}.trip-value{font-size:2.1vh;font-weight:700}.trip-label{font-size:1.25vh;color:#c2c7ce;margin-top:.25vh}.trip-caret{align-self:center;color:var(--bronze2);font-size:2.1vh}
+.dock{position:absolute;left:50%;bottom:3.2vh;transform:translateX(-50%);height:9.3vh;min-height:68px;border-radius:28px;padding:1vh 1.2vw;display:flex;align-items:center;gap:1vw}.dock-btn{width:7vh;height:7vh;min-width:52px;min-height:52px;border:0;border-radius:22px;background:rgba(255,255,255,.07);color:white;display:grid;place-items:center;font-size:2.9vh;transition:.15s transform,.15s background;cursor:pointer}.dock-btn:active{transform:scale(.92);background:rgba(199,139,100,.25)}.dock-btn.primary{background:linear-gradient(145deg,#4cbdff,#1590cf);box-shadow:0 0 0 2px rgba(255,255,255,.18),0 9px 25px rgba(12,145,220,.28)}.dock-btn.spotify{background:var(--green);color:#07110a}.dock-btn.settings{background:rgba(255,255,255,.13)}
+.status{position:absolute;right:3.2vw;bottom:4.6vh;border-radius:30px;padding:1.15vh 1.45vw;display:flex;gap:1vw;align-items:center;font-size:1.65vh;color:#e6e9ed}.clock{font-size:2vh}.speed{position:absolute;left:50%;bottom:14.7vh;transform:translateX(-50%);padding:.75vh 1vw;border-radius:18px;color:#eaf2ff;font-size:1.45vh;background:rgba(4,7,10,.78);border:1px solid rgba(90,150,255,.25);pointer-events:auto;cursor:pointer}
+.user-marker{width:34px;height:44px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.65));transform-origin:50% 66%}.user-marker:before{content:"";position:absolute;left:8px;top:5px;width:18px;height:27px;background:linear-gradient(180deg,#e9f5ff,#1686ff 65%,#0747bb);clip-path:polygon(50% 0,100% 100%,50% 77%,0 100%);border-radius:8px}.user-marker:after{content:"";position:absolute;left:13px;top:30px;width:8px;height:8px;border-radius:50%;background:#77c9ff;box-shadow:0 0 14px #1686ff}.destination-marker{width:26px;height:26px;border:5px solid #fff;border-radius:50% 50% 50% 0;background:var(--bronze);transform:rotate(-45deg);box-shadow:0 6px 16px rgba(0,0,0,.55)}
+.modal{position:absolute;inset:0;z-index:2000;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;pointer-events:auto;backdrop-filter:blur(8px)}.modal.show{display:flex}.panel{width:min(72vw,900px);max-height:82vh;overflow:auto;border-radius:28px;padding:2.7vh 2.3vw;background:#0b0f14;border:1px solid rgba(199,139,100,.3);box-shadow:0 25px 80px rgba(0,0,0,.65)}.panel h2{margin:0 0 2vh;font-size:2.8vh}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1vw}.app-tile{border:1px solid rgba(255,255,255,.08);background:#151a21;color:#fff;border-radius:20px;padding:2.2vh 1.1vw;text-align:center;font-size:1.8vh;cursor:pointer}.app-tile b{display:block;font-size:3.2vh;margin-bottom:.7vh}.setting{display:flex;justify-content:space-between;align-items:center;padding:1.35vh 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:1.65vh}.setting button,.close,.route-btn{border:0;border-radius:14px;background:#272d36;color:white;padding:1vh 1.15vw;font-size:1.5vh;cursor:pointer}.close{margin-top:1.8vh;background:var(--bronze);color:#111;font-weight:700}.route-search{display:flex;gap:1vw}.route-search input{flex:1;border:1px solid rgba(255,255,255,.13);border-radius:16px;background:#11161d;color:#fff;padding:1.25vh 1.2vw;font-size:1.8vh;user-select:text}.route-search input:focus{outline:1px solid var(--bronze)}.route-btn{background:var(--bronze);color:#111;font-weight:700;min-width:11vw}.route-actions{display:flex;gap:1vw;margin-top:1.4vh;flex-wrap:wrap}.route-actions button{border:0;border-radius:14px;padding:1.05vh 1.1vw;background:#19202a;color:#fff;font-size:1.5vh}.route-status{margin-top:1.3vh;color:#c9ced5;font-size:1.5vh;min-height:2.2vh}.notice{position:absolute;top:2vh;left:50%;z-index:3000;transform:translateX(-50%);padding:1vh 1.2vw;border-radius:16px;background:rgba(8,11,15,.95);border:1px solid rgba(199,139,100,.3);display:none;font-size:1.45vh;pointer-events:auto}.notice.show{display:block}.map-error{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:8vw;color:#dce2e9;background:radial-gradient(circle,#16202d,#05070a);z-index:10;font-size:2vh}.map-error.show{display:flex}
+@media (max-aspect-ratio:16/10){.nav-card{min-width:280px;width:32vw}.media-card{min-width:350px;width:36vw}.dock{gap:.6vw}.dock-btn{width:6.5vh;height:6.5vh}.trip-card{bottom:14vh}.speed{bottom:14vh}.nav-road{max-width:22vw}}
+</style>
+</head>
+<body>
+<div id="map"><div class="map-error" id="mapError">No se pudo cargar el mapa. Comprueba la conexión a Internet.<br><br>Puedes seguir abriendo Waze o Google Maps desde los botones inferiores.</div></div>
+<div class="overlay">
+  <section class="card nav-card" id="navCard" onclick="openRouteModal()">
+    <div class="turn-row"><div class="turn-arrow" id="turnArrow">⌕</div><div><div class="nav-distance" id="navDistance">Buscar destino</div><div class="nav-road" id="navRoad">Pulsa para crear una ruta</div></div></div>
+    <div class="nav-next" id="navNext">Mapa vectorial · GPS real · ruta calculada</div>
+  </section>
+
+  <section class="card media-card" id="mediaCard" onclick="mediaCardAction()">
+    <div class="media-head"><span class="spotify-dot"></span><span>Spotify</span></div>
+    <div class="media-main"><div class="album" id="album">≋</div><div><div class="track" id="track">Comprobando Spotify…</div><div class="artist" id="artist">Espera un momento</div></div></div>
+    <div class="progress"><div id="progressFill"></div></div>
+    <div class="times"><span id="elapsed">0:00</span><span id="duration">0:00</span></div>
+    <div class="media-controls disabled" id="mediaControls"><button class="media-btn" onclick="event.stopPropagation();Android.media('previous')">◀</button><button class="media-btn play" id="playBtn" onclick="event.stopPropagation();Android.media('toggle')">▶</button><button class="media-btn" onclick="event.stopPropagation();Android.media('next')">▶</button></div>
+  </section>
+
+  <section class="card trip-card" id="tripCard" onclick="openRouteModal()"><div><div class="trip-value" id="arrival">--:--</div><div class="trip-label">Llegada</div></div><div><div class="trip-value" id="minutes">--</div><div class="trip-label">min</div></div><div><div class="trip-value" id="kilometres">--</div><div class="trip-label">km</div></div><div class="trip-caret">⌃</div></section>
+  <div class="speed" id="speed" onclick="recenterMap()">GPS · esperando ubicación</div>
+
+  <nav class="dock">
+    <button class="dock-btn" onclick="showModal('apps')">⠿</button>
+    <button class="dock-btn" onclick="Android.open('assistant')">◉</button>
+    <button class="dock-btn primary" onclick="recenterMap()">⌖</button>
+    <button class="dock-btn spotify" onclick="Android.open('spotify')">≋</button>
+    <button class="dock-btn settings" onclick="showModal('settings')">⚙</button>
+  </nav>
+
+  <div class="pill status"><span>▂▄▆█</span><span>4G</span><span>▯</span><span class="clock" id="clock">--:--</span></div>
+  <div class="notice" id="notice"></div>
+
+  <div class="modal" id="routeModal"><div class="panel"><h2>Crear una ruta</h2>
+    <div class="route-search"><input id="destinationInput" type="text" placeholder="Dirección o lugar, por ejemplo: Sagrada Família" autocomplete="off" /><button class="route-btn" onclick="searchDestination()">Buscar</button></div>
+    <div class="route-status" id="routeStatus">La búsqueda solo se ejecuta cuando pulsas Buscar.</div>
+    <div class="route-actions" id="routeActions" style="display:none"><button onclick="navigateExternal('waze')">Abrir en Waze</button><button onclick="navigateExternal('maps')">Abrir en Google Maps</button><button onclick="clearRoute()">Quitar ruta</button></div>
+    <button class="close" onclick="hideModal('route')">Cerrar</button>
+  </div></div>
+
+  <div class="modal" id="appsModal"><div class="panel"><h2>Aplicaciones</h2><div class="grid">
+    <button class="app-tile" onclick="Android.open('waze')"><b>◉</b>Waze</button>
+    <button class="app-tile" onclick="Android.open('spotify')"><b>≋</b>Spotify</button>
+    <button class="app-tile" onclick="Android.open('maps')"><b>⌖</b>Google Maps</button>
+    <button class="app-tile" onclick="openRouteModal()"><b>↱</b>Crear ruta</button>
+    <button class="app-tile" onclick="Android.open('android-settings')"><b>⚙</b>Ajustes Android</button>
+    <button class="app-tile" onclick="Android.open('exit')"><b>×</b>Salir</button>
+  </div><button class="close" onclick="hideModal('apps')">Cerrar</button></div></div>
+
+  <div class="modal" id="settingsModal"><div class="panel"><h2>Ajustes de Ángel Drive</h2>
+    <div class="setting"><span>Spotify real y controles multimedia</span><button onclick="Android.open('notification-access')">Dar acceso</button></div>
+    <div class="setting"><span>Permiso y servicios de ubicación</span><button onclick="Android.open('location-settings')">Ubicación</button></div>
+    <div class="setting"><span>Elegir como launcher de la AI Box</span><button onclick="Android.open('home-settings')">Elegir</button></div>
+    <div class="setting"><span>Mapa</span><span>OpenFreeMap + MapLibre</span></div>
+    <div class="setting"><span>Rutas</span><span>OSRM, sin tráfico en tiempo real</span></div>
+    <div class="setting"><span>Versión</span><span>0.3.0</span></div>
+    <button class="close" onclick="hideModal('settings')">Cerrar</button>
+  </div></div>
+</div>
+<script>
+let map, userMarker, destinationMarker;
+let mapLoaded=false, followUser=true, hasLocation=false;
+let currentLat=41.3874,currentLon=2.1686,currentBearing=0,currentSpeed=0;
+let selectedDestination=null, routeSteps=[], activeStepIndex=0, routeDuration=0, routeDistance=0;
+let notificationAccess=false, spotifyConnected=false, mediaPlaying=false;
+
+function showModal(name){document.getElementById(name+'Modal').classList.add('show')}
+function hideModal(name){document.getElementById(name+'Modal').classList.remove('show')}
+function openRouteModal(){hideModal('apps');showModal('route');setTimeout(()=>document.getElementById('destinationInput').focus(),120)}
+function showNotice(text,ms=3200){const n=document.getElementById('notice');n.textContent=text;n.classList.add('show');clearTimeout(n._t);n._t=setTimeout(()=>n.classList.remove('show'),ms)}
+function fmtTime(ms){if(!ms||ms<0)return '0:00';const s=Math.floor(ms/1000),m=Math.floor(s/60),r=s%60;return m+':'+String(r).padStart(2,'0')}
+function fmtDistance(m){if(!Number.isFinite(m))return '--';return m<1000?Math.max(0,Math.round(m/10)*10)+' m':(m/1000).toFixed(m<10000?1:0).replace('.',',')+' km'}
+function haversine(lat1,lon1,lat2,lon2){const R=6371000,p1=lat1*Math.PI/180,p2=lat2*Math.PI/180,dp=(lat2-lat1)*Math.PI/180,dl=(lon2-lon1)*Math.PI/180;const a=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*R*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
+function arrowFor(modifier,type){if(type==='arrive')return '●';if(type==='depart')return '↑';return ({'right':'↱','slight right':'↗','sharp right':'↰','left':'↰','slight left':'↖','sharp left':'↲','straight':'↑','uturn':'↶'})[modifier]||'↑'}
+function stepDescription(step){if(!step)return 'Continúa por la ruta';if(step.type==='arrive')return 'Has llegado al destino';if(step.type==='depart')return step.name||'Inicia la ruta';return step.name||'Continúa'}
+
+try{
+  map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/dark',center:[currentLon,currentLat],zoom:13.3,pitch:48,bearing:0,attributionControl:false,antialias:true,maxPitch:70});
+  map.addControl(new maplibregl.AttributionControl({compact:true,customAttribution:'Ángel Drive'}),'bottom-left');
+  map.on('load',()=>{mapLoaded=true;ensureRouteLayers();if(hasLocation)recenterMap();});
+  map.on('dragstart',()=>followUser=false);map.on('zoomstart',()=>followUser=false);map.on('error',e=>{if(!mapLoaded)document.getElementById('mapError').classList.add('show')});
+}catch(e){document.getElementById('mapError').classList.add('show')}
+
+function ensureRouteLayers(){if(!mapLoaded||map.getSource('route'))return;map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:[]}}});map.addLayer({id:'route-shadow',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#001a48','line-width':15,'line-opacity':.72}});map.addLayer({id:'route-line',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#1686ff','line-width':7,'line-opacity':1}})}
+function setRouteGeometry(coords){if(!mapLoaded)return;ensureRouteLayers();map.getSource('route').setData({type:'Feature',geometry:{type:'LineString',coordinates:coords}})}
+function setUserMarker(lon,lat,bearing){if(!mapLoaded)return;if(!userMarker){const el=document.createElement('div');el.className='user-marker';userMarker=new maplibregl.Marker({element:el,rotationAlignment:'map',pitchAlignment:'map'}).setLngLat([lon,lat]).addTo(map)}else userMarker.setLngLat([lon,lat]);userMarker.setRotation(bearing)}
+function setDestinationMarker(lon,lat){if(!mapLoaded)return;if(destinationMarker)destinationMarker.remove();const el=document.createElement('div');el.className='destination-marker';destinationMarker=new maplibregl.Marker({element:el,anchor:'bottom'}).setLngLat([lon,lat]).addTo(map)}
+function recenterMap(){followUser=true;if(mapLoaded&&hasLocation)map.easeTo({center:[currentLon,currentLat],zoom:selectedDestination?16:16.5,pitch:58,bearing:currentSpeed>5?currentBearing:map.getBearing(),duration:800})}
+
+function updateRouteUi(){if(!selectedDestination||!routeSteps.length)return;while(activeStepIndex<routeSteps.length-1){const s=routeSteps[activeStepIndex],d=haversine(currentLat,currentLon,s.lat,s.lon);if(d<38)activeStepIndex++;else break}const s=routeSteps[Math.min(activeStepIndex,routeSteps.length-1)];const d=haversine(currentLat,currentLon,s.lat,s.lon);document.getElementById('turnArrow').textContent=arrowFor(s.modifier,s.type);document.getElementById('navDistance').textContent=s.type==='arrive'?'Destino':fmtDistance(d);document.getElementById('navRoad').textContent=stepDescription(s);const next=routeSteps[activeStepIndex+1];document.getElementById('navNext').textContent=next?'Después · '+stepDescription(next):selectedDestination.label;let remainingSeconds=0,remainingMetres=d;for(let i=activeStepIndex;i<routeSteps.length;i++){remainingSeconds+=routeSteps[i].duration||0;remainingMetres+=routeSteps[i].distance||0}const eta=new Date(Date.now()+remainingSeconds*1000);document.getElementById('arrival').textContent=eta.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});document.getElementById('minutes').textContent=Math.max(1,Math.round(remainingSeconds/60));document.getElementById('kilometres').textContent=(remainingMetres/1000).toFixed(1).replace('.',',');document.getElementById('tripCard').classList.add('show')}
+
+function searchDestination(){const q=document.getElementById('destinationInput').value.trim();if(q.length<3){document.getElementById('routeStatus').textContent='Escribe al menos 3 caracteres.';return}document.getElementById('routeStatus').textContent='Buscando destino…';document.getElementById('routeActions').style.display='none';Android.searchDestination(q)}
+function onSearchResult(ok,lat,lon,label,error){if(!ok){document.getElementById('routeStatus').textContent=error||'No se encontró el destino.';return}selectedDestination={lat,lon,label};document.getElementById('routeStatus').textContent='Destino: '+label+' · calculando ruta…';setDestinationMarker(lon,lat);Android.routeTo(lat,lon,label)}
+function onRouteResult(ok,payload,error){if(!ok){document.getElementById('routeStatus').textContent=error||'No se pudo calcular la ruta.';return}const data=typeof payload==='string'?JSON.parse(payload):payload;routeSteps=data.steps||[];activeStepIndex=0;routeDistance=data.distance||0;routeDuration=data.duration||0;setRouteGeometry(data.geometry.coordinates);document.getElementById('routeStatus').textContent='Ruta lista · '+fmtDistance(routeDistance)+' · '+Math.round(routeDuration/60)+' min';document.getElementById('routeActions').style.display='flex';if(mapLoaded){const bounds=new maplibregl.LngLatBounds();data.geometry.coordinates.forEach(c=>bounds.extend(c));map.fitBounds(bounds,{padding:{top:90,bottom:95,left:90,right:90},duration:900,maxZoom:16});followUser=false}hideModal('route');updateRouteUi()}
+function navigateExternal(app){if(!selectedDestination){showNotice('Primero crea una ruta');return}Android.navigate(app,selectedDestination.lat,selectedDestination.lon,selectedDestination.label)}
+function clearRoute(){selectedDestination=null;routeSteps=[];activeStepIndex=0;if(mapLoaded&&map.getSource('route'))setRouteGeometry([]);if(destinationMarker){destinationMarker.remove();destinationMarker=null}document.getElementById('tripCard').classList.remove('show');document.getElementById('turnArrow').textContent='⌕';document.getElementById('navDistance').textContent='Buscar destino';document.getElementById('navRoad').textContent='Pulsa para crear una ruta';document.getElementById('navNext').textContent='Mapa vectorial · GPS real · ruta calculada';document.getElementById('routeActions').style.display='none';document.getElementById('routeStatus').textContent='Ruta eliminada.';recenterMap()}
+
+function mediaCardAction(){if(!notificationAccess)Android.open('notification-access');else if(!spotifyConnected)Android.open('spotify')}
+function setSystemState(access){notificationAccess=access;if(!access){spotifyConnected=false;document.getElementById('track').textContent='Activa el acceso multimedia';document.getElementById('artist').textContent='Pulsa aquí para mostrar Spotify real';document.getElementById('mediaControls').classList.add('disabled');document.getElementById('progressFill').style.width='0';document.getElementById('elapsed').textContent='0:00';document.getElementById('duration').textContent='0:00'}}
+function updateMedia(access,connected,title,artist,playing,position,duration,artwork){notificationAccess=access;spotifyConnected=connected;mediaPlaying=playing;const controls=document.getElementById('mediaControls');const album=document.getElementById('album');if(!access){setSystemState(false);return}if(!connected){document.getElementById('track').textContent='Spotify no está reproduciendo';document.getElementById('artist').textContent='Abre Spotify e inicia una canción';controls.classList.add('disabled');album.style.backgroundImage='';album.textContent='≋';document.getElementById('progressFill').style.width='0';document.getElementById('elapsed').textContent='0:00';document.getElementById('duration').textContent='0:00';return}document.getElementById('track').textContent=title||'Spotify';document.getElementById('artist').textContent=artist||'';controls.classList.remove('disabled');document.getElementById('playBtn').textContent=playing?'Ⅱ':'▶';document.getElementById('elapsed').textContent=fmtTime(position);document.getElementById('duration').textContent=fmtTime(duration);document.getElementById('progressFill').style.width=duration>0?Math.min(100,Math.max(0,position/duration*100))+'%':'0';if(artwork){album.style.backgroundImage='url("'+artwork.replace(/"/g,'')+'")';album.textContent=''}else{album.style.backgroundImage='';album.textContent='≋'}}
+
+function updateLocation(lat,lon,speed,bearing){currentLat=lat;currentLon=lon;currentSpeed=speed||0;currentBearing=bearing||0;hasLocation=true;document.getElementById('speed').textContent='GPS · '+Math.round(currentSpeed)+' km/h';setUserMarker(lon,lat,currentBearing);if(followUser&&mapLoaded)map.easeTo({center:[lon,lat],zoom:16.5,pitch:58,bearing:currentSpeed>5?currentBearing:map.getBearing(),duration:550});updateRouteUi()}
+
+window.AngelDrive={updateLocation,updateMedia,setSystemState,onSearchResult,onRouteResult};
+setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})},1000);
+document.getElementById('destinationInput').addEventListener('keydown',e=>{if(e.key==='Enter')searchDestination()});
+</script>
+</body>
+</html>
